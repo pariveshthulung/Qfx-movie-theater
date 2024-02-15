@@ -16,5 +16,4 @@ public class User
     public string? UserStatus = UserStatusConstants.Active;
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-
 }

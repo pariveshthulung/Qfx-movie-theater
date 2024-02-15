@@ -1,11 +1,20 @@
-﻿namespace QFX.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace QFX.Models;
 
 public class Movie
 {
-    public int ID { get; set; }
+    public long ID { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public DateOnly ReleaseDate { get; set; }
+    public DateTime ReleaseDate { get; set; }
     public TimeSpan Runtime { get; set; }
     public string TrailerUrl { get; set; }
+    public long LanguageID { get; set; }
+    [ForeignKey("LanguageID")]
+    public virtual Language? Language { get; set; }
+    public long GenreID { get; set; }
+    [ForeignKey("GenreID")]
+    public virtual Genre? Genre  { get; set; }
+
 }
