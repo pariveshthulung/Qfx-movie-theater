@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using QFX;
@@ -15,7 +16,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(x=>{x.LoginPath = "/Auth/Login"; });
+    .AddCookie(x=>{x.LoginPath = "/Admin/Auth/Login"; });
+
+builder.Services.AddNotyf(config=>
+    { config.DurationInSeconds = 10;config.IsDismissable = true;config.Position = NotyfPosition.BottomRight; });
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages()
@@ -46,6 +50,10 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
+    pattern: "{area=Public}/{controller=Public}/{action=Index}/{id?}").RequireAuthorization();
+app.MapControllerRoute(
+    name: "Admin",
+    pattern: "{area=Admin}/{controller=Auth}/{action=Login}/{id?}").RequireAuthorization();
 
+// app.MapRazorPages();
 app.Run();

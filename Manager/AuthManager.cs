@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
+using System.Transactions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using QFX.data;
 using QFX.Entity;
 using QFX.Manager.Interface;
+using QFX.ViewModels.Auth;
 
 namespace QFX.Manager;
 
@@ -38,5 +40,18 @@ public class AuthManager : IAuthManager
     public async Task Logout()
     {
         await _httpContextAccessor.HttpContext.SignOutAsync();
+    }
+
+    public async Task Registration(RegistrationVm vm)
+    {
+            using var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var user = new User();
+            user.Name = vm.Name;
+            user.Email = vm.Email;
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vm.Password);
+            user.PhoneNo = vm.PhoneNo;
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            tx.Complete();
     }
 }

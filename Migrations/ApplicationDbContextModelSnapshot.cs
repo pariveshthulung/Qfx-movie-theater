@@ -45,6 +45,12 @@ namespace QFX.Migrations
                     b.Property<long>("PhoneNo")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("UserStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID");
 
                     b.ToTable("Users");

@@ -12,8 +12,8 @@ public class User
     public string? Email { get; set; }
     public long PhoneNo { get; set; }
     public string? PasswordHash { get; set; }
-    public string? UserType = UserTypeConstants.User;
-    public string? UserStatus = UserStatusConstants.Active;
+    public string? UserType { get; set; } = UserTypeConstants.User;
+    public string? UserStatus { get; set; } = UserStatusConstants.Active;
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 }
