@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QFX.Models;
 
 namespace QFX.ViewModels.Movie;

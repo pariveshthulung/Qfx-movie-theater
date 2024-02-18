@@ -7,6 +7,7 @@ public interface ICurrentUserProvider
     bool IsLoggedIn();
     Task<User?> GetCurrentUser();
     long? GetCurrentUserId();
+    string GetCurrentUserRole();
 
 
 }

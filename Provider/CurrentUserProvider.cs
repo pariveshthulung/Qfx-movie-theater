@@ -31,6 +31,12 @@ public class CurrentUserProvider : ICurrentUserProvider
         return Convert.ToInt64(userId);
     }
 
+    public string GetCurrentUserRole()
+    {
+        // var user = _context
+        return "hello;";
+    }
+
     public bool IsLoggedIn()
         => GetCurrentUserId() != null;
 }

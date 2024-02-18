@@ -1,0 +1,22 @@
+@using QFX.Provider.Interface
+@using QFX.Constants
+@inject ICurrentUserProvider _currentUserProvider
+@{
+    var currentUser = await _currentUserProvider.GetCurrentUser();
+}
+
+@if (_currentUserProvider.IsLoggedIn())
+{
+    <div class="d-flex gap-2 align-items-center justify-content-center">
+    <span class="text-dark">
+        @if(@currentUser.UserType == "User")
+        {
+            @currentUser.Name
+        }
+        else{
+            @currentUser.UserType
+        }
+        @* @currentUser?.Id *@
+    </span>
+</div>
+}

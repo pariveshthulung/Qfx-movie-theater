@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas/Admin/Views/Genre/Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.11" />
@@ -27,6 +31,10 @@
   <ItemGroup>
     <Folder Include="Areas/Public/Views/Public/" />
     <Folder Include="wwwroot/Public/images/movie/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Areas/Admin/Views/Genre/Index.cshtml" />
   </ItemGroup>
 
 </Project>

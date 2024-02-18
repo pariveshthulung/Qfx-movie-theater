@@ -3,6 +3,7 @@ using System.Transactions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using QFX.Constants;
 using QFX.data;
 using QFX.Entity;
 using QFX.Manager.Interface;
@@ -32,6 +33,9 @@ public class AuthManager : IAuthManager
         var claim = new List<Claim>{
             new("ID", user.ID.ToString())
         };
+        if(user.UserType == UserTypeConstants.Admin){
+            claim.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,"Admin"));
+        }
         var claimsIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
         await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
         new ClaimsPrincipal(claimsIdentity));

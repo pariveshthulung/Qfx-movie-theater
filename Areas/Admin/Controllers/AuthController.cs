@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QFX.data;
 using QFX.Manager.Interface;
+using QFX.Provider.Interface;
 using QFX.ViewModels.Auth;
 
 
@@ -15,11 +16,14 @@ public class AuthController : Controller
     private readonly IAuthManager _authmanager;
     private readonly ApplicationDbContext _context;
     private readonly INotyfService _notifyService;
-    public AuthController(IAuthManager authmanager, ApplicationDbContext context, INotyfService notyfService)
+    private readonly ICurrentUserProvider _currentUserProvider;
+
+    public AuthController(IAuthManager authmanager, ApplicationDbContext context, INotyfService notyfService, ICurrentUserProvider currentUserProvider)
     {
         _context = context;
         _authmanager = authmanager;
         _notifyService = notyfService;
+        _currentUserProvider = currentUserProvider;
     }
     public IActionResult Login()
     {
@@ -40,7 +44,15 @@ public class AuthController : Controller
             {
                 return LocalRedirect(vm.ReturnUrl);
             }
-            return RedirectToAction("Index", "Public", new { area = "Public" });
+            var currentUser = await _currentUserProvider.GetCurrentUser();
+            if (currentUser.UserType == Constants.UserTypeConstants.Admin)
+            {
+                return RedirectToAction("Index", "Movie", new { area = "Admin" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Public", new { area = "Public" });
+            }
         }
         catch (Exception e)
         {
@@ -49,13 +61,13 @@ public class AuthController : Controller
         }
     }
     public IActionResult Registration()
-    { 
+    {
         return View();
     }
     [HttpPost]
     public async Task<IActionResult> Registration(RegistrationVm vm)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return View(vm);
         }

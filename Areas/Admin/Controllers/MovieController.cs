@@ -9,7 +9,7 @@ using QFX.ViewModels.Movie;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class MovieController : Controller
 {
     private readonly ApplicationDbContext _context;
