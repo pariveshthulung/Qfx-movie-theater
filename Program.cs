@@ -50,7 +50,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=Public}/{controller=Public}/{action=Index}/{id?}").RequireAuthorization();
+    pattern: "{area=Public}/{controller=Home}/{action=Index}/{id?}").RequireAuthorization();
 app.MapControllerRoute(
     name: "Admin",
     pattern: "{area=Admin}/{controller=Auth}/{action=Login}/{id?}").RequireAuthorization();

@@ -140,8 +140,8 @@ namespace QFX.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("GenreID")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("LanguageID")
                         .HasColumnType("bigint");
@@ -162,11 +162,32 @@ namespace QFX.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("GenreID");
-
                     b.HasIndex("LanguageID");
 
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("QFX.Models.MovieGenre", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+
+                    b.Property<long>("GenreID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MovieID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GenreID");
+
+                    b.HasIndex("MovieID");
+
+                    b.ToTable("MovieGenres");
                 });
 
             modelBuilder.Entity("QFX.Models.Reservation", b =>
@@ -307,21 +328,32 @@ namespace QFX.Migrations
 
             modelBuilder.Entity("QFX.Models.Movie", b =>
                 {
-                    b.HasOne("QFX.Models.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("QFX.Models.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Language");
+                });
+
+            modelBuilder.Entity("QFX.Models.MovieGenre", b =>
+                {
+                    b.HasOne("QFX.Models.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QFX.Models.Movie", "Movie")
+                        .WithMany("MovieGenres")
+                        .HasForeignKey("MovieID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Genre");
 
-                    b.Navigation("Language");
+                    b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("QFX.Models.Reservation", b =>
@@ -405,6 +437,11 @@ namespace QFX.Migrations
                     b.Navigation("Seat");
 
                     b.Navigation("Show");
+                });
+
+            modelBuilder.Entity("QFX.Models.Movie", b =>
+                {
+                    b.Navigation("MovieGenres");
                 });
 #pragma warning restore 612, 618
         }

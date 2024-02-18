@@ -1,29 +1,53 @@
 @{
-    Layout = "_Layout";
+    Layout = "_publicLayout";
 }
 @model QFX.ViewModels.Auth.LoginVm
-
-<div class="row">
-    <div class="col-4 mx-auto">
-
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
         @if (!string.IsNullOrEmpty(Model.ErrorMessage))
         {
-            <div class="col-4">
-                <div class="alert-danger">
-                    @Model.ErrorMessage
-                </div>
+            <div class="alert alert-danger">
+                @Model.ErrorMessage
             </div>
         }
-        <form>
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input type="email" class="form-control">
+        <form method="post" class="w-25">
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="email" asp-for="Email" class="form-control " required />
+                <label class="form-label" asp-for="Email"></label>
             </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input type="password" class="form-control">
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" asp-for="Password" class="form-control " required />
+                <label class="form-label" asp-for="Password"></label>
             </div>
-            <button type="submit" class="btn btn-warning">Login</button>
+
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+                <div class="col d-flex justify-content-center">
+                    <!-- Checkbox -->
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="form2Example34" checked />
+                        <label class="form-check-label" for="form2Example34"> Remember me </label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <!-- Simple link -->
+                    <a href="#!">Forgot password?</a>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-flex justify-content-center mb-0">
+                <button type="submit" class="btn btn-primary btn-block mb-4">sign-in</button>
+            </div>
+
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Not a member? <a asp-action="Registration" asp-controller="Auth" asp-area="Admin">Register</a></p>
+            </div>
         </form>
     </div>
 </div>

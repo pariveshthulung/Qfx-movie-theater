@@ -9,4 +9,6 @@ public class RegistrationVm
     public string? Email { get; set; }
     public long PhoneNo { get; set; }
     public string? Password { get; set; }
+    public string? ConfirmPassword { get; set; }
+
 }

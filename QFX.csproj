@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Areas/Public/Views/Public/" />
+    <Folder Include="wwwroot/Public/images/movie/" />
   </ItemGroup>
 
 </Project>

@@ -132,18 +132,18 @@ public class SeederController : Controller
                 using var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
                 List<Models.Language> languages = new List<Models.Language>()
                 {
-                    new() {Name ="Action"},
-                    new() {Name ="Thriller"},
-                    new() {Name ="Drama"},
-                    new() {Name ="Horror"},
+                    new() {Name ="English"},
+                    new() {Name ="Nepali"},
+                    new() {Name ="Hindi"},
+                    new() {Name ="Japanese"},
                     
                 };
                 await _context.Languages.AddRangeAsync(languages);
                 await _context.SaveChangesAsync();
                 tx.Complete();
-                return Content("Added Genre!!!");
+                return Content("Added Language!!!");
             }
-            return Content("Genre exist!!!");
+            return Content("language exist!!!");
         }
         catch(Exception e)
         {

@@ -21,7 +21,7 @@ public class AuthManager : IAuthManager
     }
     public async Task Login(string username, string password)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email==username);
+        var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email == username);
         if(user == null){
             throw new Exception("User doesnot exist!!");
         }
@@ -29,12 +29,12 @@ public class AuthManager : IAuthManager
             throw new Exception("Invalid password");
         }
         var httpContext = _httpContextAccessor.HttpContext;
-        var claims = new List<Claim>{
+        var claim = new List<Claim>{
             new("ID", user.ID.ToString())
         };
-        var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
         await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-        new ClaimsPrincipal(claimIdentity));
+        new ClaimsPrincipal(claimsIdentity));
     }
 
     public async Task Logout()

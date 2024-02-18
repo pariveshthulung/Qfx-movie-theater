@@ -14,8 +14,6 @@ public class Movie
     public long LanguageID { get; set; }
     [ForeignKey("LanguageID")]
     public virtual Language? Language { get; set; }
-    public long GenreID { get; set; }
-    [ForeignKey("GenreID")]
-    public virtual Genre? Genre  { get; set; }
+    public virtual List<MovieGenre>? MovieGenres  { get; set; }
 
 }
