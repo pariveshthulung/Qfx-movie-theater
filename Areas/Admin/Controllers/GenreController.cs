@@ -25,7 +25,7 @@ public class GenreController : Controller
         vm.Genres = _context.Genres.ToList();
         return View(vm);
     }
-    public IActionResult add()
+    public IActionResult Add()
     {
         return View();
     }

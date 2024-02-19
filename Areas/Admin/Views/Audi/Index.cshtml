@@ -1,9 +1,9 @@
-@model QFX.ViewModels.GenreVm.IndexVm
+@model QFX.ViewModels.AudiVm.IndexVm
 <form>
 
     <div class="container">
-                <div class="d-flex justify-content-around">
-                    <button asp-controller="Genre" asp-action="Add" class="btn btn-primary" >Add</button>
+        <div class="d-flex justify-content-around">
+                    <button asp-controller="Audi" asp-action="Upsert" class="btn btn-primary" >Add</button>
                 </div>
         <div class="card shadow w-75 text-center mx-auto">
             <div class="card-body text-center">
@@ -20,7 +20,12 @@
                                     </th> *@
                                     <th>
                                         <h3>
-                                            Name
+                                            Location
+                                        </h3>
+                                    </th>
+                                    <th>
+                                        <h3>
+                                            Size
                                         </h3>
                                     </th>
                                     <th>
@@ -32,12 +37,14 @@
                                 </tr>
                             </thead>
                             <tbody class=" table-striped">
-                                @foreach (var genre in Model.Genres)
+                                @foreach (var audi in Model.Audis)
                                 {
                                     @* var i = 1; *@
                                     <tr>
                                         @* <td>@i++</td> *@
-                                        <td class="text-dark">@genre.Name</td>
+                                        <td class="text-dark">@audi.Location.CityName</td>
+                                        <td class="text-dark">@audi.Row x @audi.Column</td>
+                                        
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-md border-0 more-horizontal" type="button"
@@ -55,8 +62,8 @@
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
-                                                        <button class="dropdown-item" asp-controller="Genre"
-                                                            asp-action="Update" asp-route-id="@genre.ID">
+                                                        <button class="dropdown-item" asp-controller="Audi"
+                                                            asp-action="Upsert" asp-route-id="@audi.ID">
                                                             <i class="bi bi-pencil"></i>&nbsp; Edit
                                                         </button>
                                                     </li>
@@ -71,7 +78,7 @@
                                                     <li>
                                                         <!-- Button trigger modal -->
                                                         <button class="dropdown-item" type="button" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal-@genre.ID">
+                                                            data-bs-target="#exampleModal-@audi.ID">
                                                             <i class="bi bi-trash"></i>&nbsp Delete
                                                         </button>
                                                     </li>
@@ -79,33 +86,33 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal-@genre.ID" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                                        Warning!!!
-                                                    </h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+                                     <!-- Modal -->
+                                                <div class="modal fade" id="exampleModal-@audi.ID" tabindex="-1"
+                                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                                    Warning!!!
+                                                                </h1>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Close</button>
+                                                                <button asp-action="Delete" class="btn btn-danger"
+                                                                    asp-controller="Audi" asp-route-id="@audi.ID"
+                                                                    class="dropdown-item">
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to delete?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button asp-action="Delete" class="btn btn-danger"
-                                                        asp-controller="Genre" asp-route-id="@genre.ID"
-                                                        class="dropdown-item">
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 }
 
                             </tbody>
