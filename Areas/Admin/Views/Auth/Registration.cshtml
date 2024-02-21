@@ -12,8 +12,8 @@
             <div class="row mb-4">
                 <div class="col">
                     <div class="form-outline">
-                        <input type="text" asp-for="Name" class="form-control" />
-                        <label class="form-label" asp-for="Name"></label>
+                        <label class="form-label" asp-for="Name">Name<span>*</span></label>
+                        <input type="text" asp-for="Name" class="form-control" required/>
                     </div>
                 </div>
                 @* <div class="col">
@@ -26,18 +26,26 @@
 
             <!-- Email input -->
             <div class="form-outline mb-4">
-                <input type="email" id="check" asp-for="Email" class="form-control" />
-                <label class="form-label" asp-for="Email"></label>
+                <label class="form-label" asp-for="Email">Email <span>*</span></label>
+                <input type="email" id="check" asp-for="Email" class="form-control" required/>
+            </div>
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="PhoneNo">Phone <span>*</span></label>
+                <input type="text" id="check" asp-for="PhoneNo" class="form-control" required/>
+            </div>
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="DateOfBirth"> Date of Birth<span>*</span></label>
+                <input type="date" id="check" asp-for="DateOfBirth" class="form-control" required />
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4">
-                <input type="password" asp-for="Password" name="password" id="password" class="form-control" />
-                <label class="form-label" asp-for="Password">Password</label>
+                <label class="form-label" asp-for="Password">Password <span>*</span></label>
+                <input type="password" asp-for="Password" name="password" id="password" class="form-control" required/>
             </div>
             <div class="form-outline mb-4">
+                <label class="form-label" asp-for="ConfirmPassword">Confirm Password <span>*</span></label>
                 <input type="password" asp-for="ConfirmPassword" name="confirmPassword" id="confirmPassword" class="form-control" />
-                <label class="form-label" asp-for="ConfirmPassword">Confirm Password</label>
                 <span id='message'></span>
             </div>
 

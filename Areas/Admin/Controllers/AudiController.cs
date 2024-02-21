@@ -8,12 +8,12 @@ using QFX.ViewModels.AudiVm;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Roles ="Admin")]
+[Authorize(Roles = "Admin")]
 public class AudiController : Controller
 {
     private readonly INotyfService _notifyService;
     private readonly ApplicationDbContext _context;
-    public AudiController(ApplicationDbContext context,INotyfService notyfService)
+    public AudiController(ApplicationDbContext context, INotyfService notyfService)
     {
         _notifyService = notyfService;
         _context = context;
@@ -21,7 +21,7 @@ public class AudiController : Controller
     public IActionResult Index()
     {
         var vm = new IndexVm();
-        vm.Audis = _context.Audis.Include(x=>x.Location).ToList();
+        vm.Audis = _context.Audis.Include(x => x.Location).ToList();
         return View(vm);
     }
 
@@ -49,6 +49,22 @@ public class AudiController : Controller
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
+                _context.Seats.RemoveRange(_context.Seats.Where(x => x.AudiID == ID).ToList());
+                await _context.SaveChangesAsync();
+
+                char x = 'A';
+                for (var i = 1; i <= vm.Column; i++)
+                {
+                    for (var j = 1; j <= vm.Row; j++)
+                    {
+                        var seat = new Seat();
+                        seat.SeatName = x.ToString() + j;
+                        seat.AudiID = audi.ID;
+                        _context.Seats.Add(seat);
+                        await _context.SaveChangesAsync();
+                    }
+                    x++;
+                }
             }
             else
             {
@@ -57,6 +73,21 @@ public class AudiController : Controller
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
                 _context.Audis.Add(audi);
+                await _context.SaveChangesAsync();
+
+                char x = 'A';
+                for (var i = 1; i <= vm.Column; i++)
+                {
+                    for (var j = 1; j <= vm.Row; j++)
+                    {
+                        var seat = new Seat();
+                        seat.SeatName = x.ToString() + j;
+                        seat.AudiID = audi.ID;
+                        _context.Seats.Add(seat);
+                        await _context.SaveChangesAsync();
+                    }
+                    x++;
+                }
             }
             _notifyService.Success("Done successfully!!");
             await _context.SaveChangesAsync();
@@ -73,6 +104,7 @@ public class AudiController : Controller
         try
         {
             _context.Audis.Remove(_context.Audis.FirstOrDefault(x => x.ID == ID));
+            _context.Seats.RemoveRange(_context.Seats.Where(x => x.AudiID == ID).ToList());
             await _context.SaveChangesAsync();
             _notifyService.Success("Language Deleted!!!");
             return RedirectToAction("Index");
