@@ -10,10 +10,11 @@ public class Movie
     public DateTime ReleaseDate { get; set; }
     public TimeSpan Runtime { get; set; }
     public string? ImageUrl { get; set; }
+    public string? CoverUrl { get; set; }
     public string TrailerUrl { get; set; }
     public long LanguageID { get; set; }
     [ForeignKey("LanguageID")]
     public virtual Language? Language { get; set; }
-    public virtual List<MovieGenre>? MovieGenres  { get; set; }
+    public virtual List<MovieGenre> MovieGenres  { get; set; }
 
 }

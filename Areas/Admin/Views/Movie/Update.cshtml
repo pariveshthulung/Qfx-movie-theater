@@ -63,7 +63,8 @@
                                     <div class="col-md-6">
                                         <label asp-for="Runtime" class="text-black">RunTime<span
                                                 class="text-danger">*</span></label>
-                                        <input asp-for="Runtime" type="text" placeholder="2:50" class="form-control" required>
+                                        <input asp-for="Runtime" type="text" placeholder="2:50" class="form-control"
+                                            required>
                                     </div>
                                     <div class="col-md-6">
                                         <label asp-for="ReleaseDate" class="text-black">Release date <span
@@ -77,10 +78,20 @@
                                     <div class="col-md-4">
                                         <label asp-for="PosterImage" class="text-black">Poster<span
                                                 class="text-danger">*</span></label>
-                                        <input asp-for="PosterImage" accept="image/*" onchange="showMyImage(this)" class="form-control">
+                                        <input asp-for="PosterImage" accept="image/*" onchange="showMyImage(this)"
+                                            class="form-control">
                                     </div>
-                                <img id="thumbnil" style="width:20%; margin-top:10px;"  src="/Public/images/movie/@Model.ImageUrl">
-
+                                    <img id="thumbnil" style="width:20%; margin-top:10px;"
+                                        src="/Public/images/movie/@Model.ImageUrl">
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <label asp-for="CoverImage" class="text-black">Cover<span
+                                                class="text-danger">*</span></label>
+                                        <input asp-for="CoverImage" accept="image/*" onchange="showMyCover(this)"
+                                            class="form-control">
+                                    </div>
+                                    <img id="thumbnilCover" style="width:20%; margin-top:10px;" src="/Public/images/movie/@Model.CoverUrl">
 
                                     @* <div class="col-md-4">
                                     <label class="text-black">Postal / Zip <span
@@ -111,9 +122,9 @@
                 </p>
                 </div> *@
                 @* <div class="col-6 col-md-2">
-                    <button type="submit" asp-action="Index" asp-controller="Public"
-                        class="btn btn-primary form-control">Back
-                    </button>
+                <button type="submit" asp-action="Index" asp-controller="Public"
+                class="btn btn-primary form-control">Back
+                </button>
                 </div> *@
                 <div class="col-6 col-md-3">
                     <button type="submit" value="Place Order" class="btn btn-primary form-control">Update Movie</button>
@@ -126,23 +137,43 @@
 <script>
     datePickerId.min = new Date().toISOString().split("T")[0];
     datePickerId.value = new Date().toISOString().split("T")[0];
-     function showMyImage(fileInput) {
+    function showMyImage(fileInput) {
         var files = fileInput.files;
-        for (var i = 0; i < files.length; i++) {           
+        for (var i = 0; i < files.length; i++) {
             var file = files[i];
-            var imageType = /image.*/;     
+            var imageType = /image.*/;
             if (!file.type.match(imageType)) {
                 continue;
-            }           
-            var img=document.getElementById("thumbnil");            
-            img.file = file;    
+            }
+            var img = document.getElementById("thumbnil");
+            img.file = file;
             var reader = new FileReader();
-            reader.onload = (function(aImg) { 
-                return function(e) { 
-                    aImg.src = e.target.result; 
-                }; 
+            reader.onload = (function (aImg) {
+                return function (e) {
+                    aImg.src = e.target.result;
+                };
             })(img);
             reader.readAsDataURL(file);
-        }    
+        }
     }
+    function showMyCover(fileInput) {
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var imageType = /image.*/;
+            if (!file.type.match(imageType)) {
+                continue;
+            }
+            var img = document.getElementById("thumbnilCover");
+            img.file = file;
+            var reader = new FileReader();
+            reader.onload = (function (aImg) {
+                return function (e) {
+                    aImg.src = e.target.result;
+                };
+            })(img);
+            reader.readAsDataURL(file);
+        }
+    }
+
 </script>

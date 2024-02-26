@@ -31,6 +31,7 @@ public class AudiController : Controller
         if (ID != null)
         {
             var audi = await _context.Audis.FirstOrDefaultAsync(x => x.ID == ID);
+            vm.Name = audi.Name;
             vm.Row = audi.Row;
             vm.Column = audi.Column;
             vm.LocationID = audi.LocationID;
@@ -46,6 +47,7 @@ public class AudiController : Controller
             if (ID != null)
             {
                 var audi = await _context.Audis.FirstOrDefaultAsync(x => x.ID == ID);
+                audi.Name = vm.Name;
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
@@ -68,7 +70,11 @@ public class AudiController : Controller
             }
             else
             {
+                var existAudi = _context.Audis.Where(x=>x.LocationID==vm.LocationID).ToList();
+                int n = existAudi.Count;
+                n++;
                 var audi = new Audi();
+                audi.Name = "Audi"+ n;
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;

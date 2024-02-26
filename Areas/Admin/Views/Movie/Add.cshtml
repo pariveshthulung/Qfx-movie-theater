@@ -44,11 +44,6 @@
                                     <div class="col-md-12">
                                         <label asp-for="Description" class="text-black">Description<span
                                                 class="text-danger">*</span></label>
-                                        @* <input type="text" class="form-control" asp-for="Description" required> *@
-                                        @* <textarea asp-for="Description"
-                                        cols="30" rows="5" class="form-control"
-                                        placeholder="Write your notes here..."></textarea> *@
-                                        @* @Html.TextAreaFor(model => model.Description, 10, 40, null); *@
                                         <textarea asp-for="Description" class="form-control"></textarea>
 
                                     </div>
@@ -80,13 +75,14 @@
                                         <input asp-for="PosterImage" accept="image/*" onchange="showMyImage(this)" class="form-control">
                                     </div>
                                 <img id="thumbnil" style="width:20%; margin-top:10px;"  src="">
+                                <div class="col-md-4">
+                                        <label asp-for="CoverImage" class="text-black">Cover<span
+                                                class="text-danger">*</span></label>
+                                        <input asp-for="CoverImage" accept="image/*" onchange="showMyCover(this)" class="form-control">
+                                    </div>
+                                <img id="thumbnilCover" style="width:20%; margin-top:10px;"  src="">
 
 
-                                    @* <div class="col-md-4">
-                                    <label class="text-black">Postal / Zip <span
-                                    class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" >
-                                    </div> *@
                                 </div>
 
 
@@ -135,6 +131,25 @@
                 continue;
             }           
             var img=document.getElementById("thumbnil");            
+            img.file = file;    
+            var reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        }    
+    }
+     function showMyCover(fileInput) {
+        var files = fileInput.files;
+        for (var i = 0; i < files.length; i++) {           
+            var file = files[i];
+            var imageType = /image.*/;     
+            if (!file.type.match(imageType)) {
+                continue;
+            }           
+            var img=document.getElementById("thumbnilCover");            
             img.file = file;    
             var reader = new FileReader();
             reader.onload = (function(aImg) { 

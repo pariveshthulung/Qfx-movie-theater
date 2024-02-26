@@ -49,6 +49,10 @@ public class AuthController : Controller
             {
                 return RedirectToAction("Index", "Movie", new { area = "Admin" });
             }
+            else if(currentUser.UserType == Constants.UserTypeConstants.Employee)
+            {
+                return RedirectToAction("Index", "Movie", new { area = "Admin" });
+            }
             else
             {
                 return RedirectToAction("Index", "Public", new { area = "Public" });

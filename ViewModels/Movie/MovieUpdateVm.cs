@@ -11,7 +11,9 @@ public class MovieUpdateVm
     public DateTime ReleaseDate { get; set; }
     public string? Runtime { get; set; }
     public IFormFile? PosterImage { get; set; }
+    public IFormFile? CoverImage { get; set; }
     public string? ImageUrl { get; set; }
+    public string? CoverUrl { get; set; }
     public string? TrailerUrl { get; set; }
     public List<Language>? Languages;
     public long LanguageID { get; set; }

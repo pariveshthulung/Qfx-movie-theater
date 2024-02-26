@@ -1,0 +1,273 @@
+@{
+    Layout = "_PublicLayout";
+}
+@model QFX.ViewModels.PublicVm.BuyTicketVm
+<style>
+    .is-clicked {
+        background-color: #9195F6;
+        color: white;
+    }
+
+    .date:hover {
+        background-color: #9195F6;
+        color: white;
+        cursor: pointer;
+    }
+
+    .selected-seat {
+        color: #FFD23F;
+    }
+</style>
+<div class=" my-3">
+    <div class="row" style="margin-left:15px">
+        <div class="col-3">
+            <div style="margin-left:70px" class="row">
+                <img src="/Public/images/movie/@Model.Shows.Movie.ImageUrl"
+                    style="width:200px; height:300px; object-fit:contain;" alt="">
+            </div>
+            <div class="row">
+                <h6 style="color: #9195F6;" class="mt-3 text-center">
+                    @Model.Shows.ShowStatus
+                </h6>
+            </div>
+            <div class="row text-center">
+                <h4 style="margin:0" class="text-dark">
+                    @Model.Shows.Movie.Title
+                </h4>
+                <small>
+                    <span class="px-1 rounded-start rounded-end" style="background-color: black; color:white;">
+
+                        @Model.Shows.Movie.Runtime.ToString("h':'mm")
+                    </span>
+                </small>
+            </div>
+            <div class="row">
+                <small>
+                    <p style="line-height: 1.4;" class="">@Model.Shows.Movie.Description</p>
+                    <div class="mid" id="HiddenDiv" style="display: none;">
+                        <strong>Language:</strong>@Model.Shows.Movie.Language.Name
+                        <br>
+                        <strong>Genre:</strong>
+                        <p style="display:inline;">
+                            @foreach (var genre in Model.Shows.Movie.MovieGenres)
+                            {
+                                @Html.Raw(@genre.Genre.Name + ",")
+                            }
+                        </p>
+                        <br>
+                        <strong>Cast:</strong>@Model.Shows.Movie.Language.Name
+                    </div>
+                    <p class="text-center"><button class="border-0" style="color: #9195F6;" id="readMore"
+                            onclick="javascript:ShowHide('HiddenDiv')">read more</button></p>
+
+                </small>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card">
+                @* <div class="card-header">
+                <h2>Now Showing</h2>
+                </div> *@
+                <div class="card-body">
+                    <div class="mx-5">
+                        <article>
+                            <h5><span>1.</span>Select Date and time slots</h5>
+                        </article>
+                        <div class="dateTime">
+                            <br>
+                            <span>Select Date</span>
+                            <div class="row">
+                                <div class="col-4">
+                                    <small>
+                                        <div class="row text-center">
+                                            <div class="col-3"> <span>Today</span></div>
+                                            <div class="col-3 p-0"><span>Tomorrow</span></div>
+                                            <div class="col-3"></div>
+                                            <div class="col-3"></div>
+                                        </div>
+                                    </small>
+                                    @* @if(@Model.Shows.Date == DateTime.Today){ *@
+
+                                    <div class="row text-center">
+                                        <div class="col-3 ">
+                                            <article id="selectDate" class="border rounded-3 date"
+                                                onclick="ShowHide('UnhideTime')">
+                                                <p class="m-0 p-0">
+                                                    @Model.Shows.Date.ToString("MMM")<br>
+                                                </p>
+                                                <strong>
+                                                    <h2 class="m-0">
+                                                        @Model.Shows.Date.ToString("dd")<br>
+                                                    </h2>
+                                                </strong>
+                                                @Model.Shows.Date.ToString("ddd")
+                                            </article>
+                                        </div>
+
+                                        <div class="col-3"></div>
+                                        <div class="col-3"></div>
+                                    </div>
+                                    @* } *@
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div id="UnhideTime" style="display: none;" class="row">
+                                <div class="">
+                                    <strong>
+                                        @Model.Shows.Audi.Location.CityName
+                                    </strong>
+                                    &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span id="hideFirst" class="border rounded-3 p-2 date"
+                                        onclick="ShowHide('seat')">@Model.Shows.Time.ToString("HH : mm")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="mx-5">
+                        <article>
+                            <h5><span>2.</span>Pick seat &nbsp; | @Model.Shows.Movie.Title</h5>
+                        </article>
+                        <div id="seat" class=" row my-5" style="display: none;">
+                            <div class="row mt-3">
+                                <h4 class="text-center">Screen</h4>
+                            </div>
+                            <div class="row mt-0">
+
+                                <svg width="300" height="21" viewBox="0 0 300 21" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" class="nowshowing-svg">
+                                    <path
+                                        d="M10 9C10 9 56 0 150 0C244 0 290 9 290 9L300 21C300 21 246 14 150 14C54 14 0 21 0 21L10 9Z"
+                                        fill="url(#paint0_linear_780_4378)"></path>
+                                    <defs>
+                                        <linearGradient id="paint0_linear_780_4378" x1="147.916" y1="2.5" x2="147.916"
+                                            y2="23.5" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#00aad3"></stop>
+                                            <stop offset="0.0833333" stop-color="#00aad3" stop-opacity="0.94"></stop>
+                                            <stop offset="0.682292" stop-color="#212027" stop-opacity="0.54"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="platinum">
+                                    <small>
+                                        <span class="d-block text-center">PLATINUM NRP 300.00</span>
+                                    </small>
+                                    @* @foreach(var seat in Model.ShowSeats){
+                                    <div class="row">
+                                    <span>
+
+                                    </span>
+                                    </div>
+                                    } *@
+
+                                    @{
+                                        var x = 'A';
+
+                                        for (var i = 1; i <= Model.Shows.Audi.Column; i++)
+                                        {
+                                            var totalColumn = Model.Shows.Audi.Column;
+
+                                            <table id="myTable" class="w-100">
+                                                <tbody class="">
+                                                    @if (i == totalColumn - 2)
+                                                    {
+                                                        <div class="mt-5">
+
+                                                            <small>
+                                                                <span class="d-block text-center">Premium NRP 450.00</span>
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                    @if (i == totalColumn - 1)
+                                                    {
+                                                        <div class="mt-5">
+
+                                                            <small>
+                                                                <span class="d-block text-center">Platinum NRP 300.00</span>
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                    <tr class="mx-auto">
+                                                        <td class="w-25">
+                                                            <div>
+                                                                <span class="p-1 m-1">
+                                                                    @x
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        @for (var j = 1; j <= Model.Shows.Audi.Row; j++)
+                                                        {
+                                                            <td id=@x@j class="mx-3 ">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                                                    fill="currentColor" class=" mx-1 bi bi-archive-fill"
+                                                                    viewBox="0 0 16 16">
+                                                                    <path
+                                                                        d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
+                                                                </svg>
+                                                                <span style="margin-left:10px ;" class="d-block"></span>
+                                                            </td>
+
+                                                        }
+                                                    </tr>
+                                                    <br>
+                                                </tbody>
+                                            </table>
+                                            x++;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">// <![CDATA[
+    function ShowHide(divId) {
+        if (document.getElementById(divId).style.display == 'none') {
+            document.getElementById(divId).style.display = 'block';
+            document.getElementById('readMore').innerHTML = 'read less';
+        }
+        else {
+            document.getElementById(divId).style.display = 'none';
+            document.getElementById('readMore').innerHTML = 'read more';
+
+
+        }
+        if (divId == "UnhideTime") {
+            document.getElementById("selectDate").classList.toggle("is-clicked");
+        }
+    @* if (divId == "seat") {
+            document.getElementById("dateTime").style.display == 'none');
+            } *@
+    }
+     @* document.querySelector('#hideFirst').onclick = function(){
+        if(document.querySelector('.dateTime').style.display == 'block'){
+            document.querySelector('.dateTime').style.display = 'none';
+        }
+    } *@
+
+    document.querySelectorAll('#myTable td')
+        .forEach(e => e.addEventListener("click", function () {
+            e.classList.toggle("selected-seat");
+            @* e.lastElementChild.innerHTML = this.id; *@
+            if (e.lastElementChild.innerHTML === this.id) {
+                e.lastElementChild.innerHTML = "";
+            } else {
+                e.lastElementChild.innerHTML = this.id;
+            }
+        }));
+    // ]]></script>

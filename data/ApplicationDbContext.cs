@@ -22,4 +22,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Show> Shows { get; set; }
     public DbSet<ShowSeat> ShowSeats { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
+
+    public DbSet<UserLocationPreference> UserLocationPreferences {get;set;}
 }

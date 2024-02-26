@@ -1,11 +1,11 @@
-@using QFX.ViewModels
-@model MovieIndexVm
+
+@model QFX.ViewModels.ShowVm.IndexVm
 
 <div class="container">
 <form action="">
 
     <div class="d-flex justify-content-end">
-        <button asp-controller="Movie" asp-action="Add" class="btn btn-primary">Add</button>
+        <button asp-controller="Show" asp-action="Upsert" class="btn btn-primary">Add</button>
     </div>
 </form>
     <div class="row">
@@ -22,40 +22,45 @@
                                     <tr>
                                         <th>
                                             <h5>
-                                                Image
+                                                Poster
                                             </h5>
                                         </th>
                                         <th>
                                             <h5>
-                                                Title
+                                                MovieTitle
                                             </h5>
                                         </th>
                                         <th>
                                             <h5>
-                                                Decription
+                                                Time
                                             </h5>
                                         </th>
                                         <th>
                                             <h5>
-                                                genre
+                                                Date
+                                            </h5>
+                                        </th>
+                                        <th>
+                                            <h5>
+                                                ShowStatus
                                             </h5>
                                         </th>
 
                                         <th>
                                             <h5>
-                                                Language
+                                                Location
                                             </h5>
                                         </th>
                                         <th>
                                             <h5>
-                                                Runtime
+                                                Audi
                                             </h5>
                                         </th>
-                                        <th>
+                                        @* <th>
                                             <h5>
                                                 Release Date
                                             </h5>
-                                        </th>
+                                        </th> *@
                                         <th>
                                             <h5>
                                                 Action
@@ -65,40 +70,38 @@
                                 </thead>
 
                                 <tbody class="text-center">
-                                    @foreach (var movie in Model.Movies)
+                                    @foreach (var show in Model.Shows)
                                     {
                                         <tr>
                                             <td>
                                                 <div class="avatar avatar-md border-0">
 
-                                                    <img src="/Public/images/movie/@movie.ImageUrl" alt="image"
+                                                    <img src="/Public/images/movie/@show.Movie.ImageUrl" alt="image"
                                                         class="avatar-img rounded ">
                                                 </div>
                                             </td>
                                             <td>
-                                                <strong class="d-inline-block text-truncate"
-                                                    style="max-width: 120px;">@movie.Title</strong>
-                                            </td>
-                                            <td class="d-inline-block text-truncate" style="max-width: 300px;">
-                                                @movie.Description
-                                            </td>
-
-                                            <td class=" text-truncate" style="max-width: 150px;">
-                                                @foreach (var genre in movie.MovieGenres)
-                                                {
-                                                    @Html.Raw(@genre.Genre.Name + ",")
-                                                }
+                                              <strong class="d-inline-block text-truncate"
+                                                    style="max-width: 120px;">@show.Movie.Title</strong>
                                             </td>
                                             <td>
-                                                @movie.Language.Name
+                                                @show.Time.ToShortTimeString()
+                                            </td>
+                                            <td>
+                                                @show.Date.ToString("dd/MM/yyyy")
                                             </td>
 
                                             <td>
-                                                @movie.Runtime
+                                                @show.ShowStatus
                                             </td>
                                             <td>
-                                                @movie.ReleaseDate.ToString("dd/MM/yyyy")
+                                                @show.Audi.Location.CityName
                                             </td>
+
+                                            <td>
+                                                @show.Audi.Name
+                                            </td>
+                                           
                                             <td>
                                                 <div class="dropdown">
                                                     <button class="btn btn-md border-0 more-horizontal" type="button"
@@ -117,7 +120,7 @@
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li>
                                                             <button class="dropdown-item" asp-controller="Movie"
-                                                                asp-action="Update" asp-route-id="@movie.ID">
+                                                                asp-action="Update" asp-route-id="@show.ID">
                                                                 <i class="bi bi-pencil"></i>&nbsp; Edit
                                                             </button>
                                                         </li>
@@ -133,7 +136,7 @@
                                                             <!-- Button trigger modal -->
                                                             <button class="dropdown-item" type="button"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#exampleModal-@movie.ID">
+                                                                data-bs-target="#exampleModal-@show.ID">
                                                                 <i class="bi bi-trash"></i>&nbsp Delete
                                                             </button>
                                                         </li>
@@ -143,7 +146,7 @@
 
                                         </tr>
                                         <!-- Modal -->
-                                        <div class="modal fade" id="exampleModal-@movie.ID" tabindex="-1"
+                                        <div class="modal fade" id="exampleModal-@show.ID" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -161,7 +164,7 @@
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Close</button>
                                                         <button asp-action="Delete" class="btn btn-danger"
-                                                            asp-controller="Movie" asp-route-id="@movie.ID"
+                                                            asp-controller="Show" asp-route-id="@show.ID"
                                                             class="dropdown-item">
                                                             Delete
                                                         </button>

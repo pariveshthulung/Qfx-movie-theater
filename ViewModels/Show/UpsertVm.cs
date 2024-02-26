@@ -32,7 +32,7 @@ public class UpsertVm
         return new SelectList(
             Audis,
             nameof(Models.Audi.ID),
-            nameof(Models.Audi.Location),
+            nameof(Models.Audi.Name),
             AudiID
         );
     }

@@ -5,6 +5,7 @@ namespace QFX.ViewModels.AudiVm;
 
 public class UpsertVm
 {
+    public string? Name { get; set; }
     public int Row { get; set; }
     public int Column { get; set; }
     public  List<Models.Location>? Locations { get; set; }

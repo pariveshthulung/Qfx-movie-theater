@@ -54,7 +54,10 @@ public class MovieController : Controller
     }
     public IActionResult Index(MovieIndexVm vm)
     {
-        vm.Movies = _context.Movies.Include(x => x.MovieGenres).ThenInclude(y => y.Genre).Include(x => x.Language).ToList();
+        vm.Movies = _context.Movies
+        .Include(x => x.MovieGenres)
+            .ThenInclude(y => y.Genre)
+        .Include(x => x.Language).ToList();
         return View(vm);
     }
 
@@ -79,6 +82,8 @@ public class MovieController : Controller
             movie.Runtime = TimeSpan.Parse(vm.Runtime);
             movie.LanguageID = vm.LanguageID;
             var imageName = ConfirmImage(vm.PosterImage, movie.ImageUrl);
+            var coverName = ConfirmImage(vm.CoverImage,movie.CoverUrl);
+            movie.CoverUrl = coverName;
             movie.ImageUrl = imageName;
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
@@ -108,6 +113,7 @@ public class MovieController : Controller
 
         vm.MovieTitle = movie.Title;
         vm.ImageUrl = movie.ImageUrl;
+        vm.CoverUrl = movie.CoverUrl;
         vm.TrailerUrl = movie.TrailerUrl;
         vm.Runtime = movie.Runtime.ToString();
         vm.Description = movie.Description;
@@ -128,6 +134,10 @@ public class MovieController : Controller
         {
             var imageName = ConfirmImage(vm.PosterImage, movie.ImageUrl);
             movie.ImageUrl = imageName;
+        }
+        if(vm.CoverImage != null){
+            var coverName = ConfirmImage(vm.CoverImage,movie.CoverUrl);
+            movie.CoverUrl = coverName;
         }
         movie.LanguageID = vm.LanguageID;
         movie.Runtime = TimeSpan.Parse(vm.Runtime);
