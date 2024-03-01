@@ -22,6 +22,7 @@ public class AuthManager : IAuthManager
     }
     public async Task Login(string username, string password)
     {
+        using var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
         var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email == username);
         if(user == null){
             throw new Exception("User doesnot exist!!");
@@ -36,9 +37,13 @@ public class AuthManager : IAuthManager
         if(user.UserType == UserTypeConstants.Admin){
             claim.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,"Admin"));
         }
+        if(user.UserType == UserTypeConstants.Employee){
+            claim.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,"Employee"));
+        }
         var claimsIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
         await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
         new ClaimsPrincipal(claimsIdentity));
+        tx.Complete();
     }
 
     public async Task Logout()

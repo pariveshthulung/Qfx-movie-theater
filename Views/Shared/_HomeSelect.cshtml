@@ -1,8 +1,12 @@
-@* @using QFX.data;
+@using QFX.data;
+@using QFX.Session;
 @using QFX.ViewModels.PublicVm;
 @using Microsoft.EntityFrameworkCore;
+@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _accessor
 @inject ApplicationDbContext _context;
 @inject QFX.Provider.Interface.ICurrentUserProvider currentUserProvider;
+@inject QFX.Provider.Interface.ICurrentLocationProvider currentLocationProvider;
 
 @{
     var currentUserId = currentUserProvider.GetCurrentUserId();
@@ -11,19 +15,26 @@
     // Get data from session
     // if found, use vm.LocationId = data from session
     // else if logged in, do from database like below
-    vm.LocationID = await _context.UserLocationPreferences.Where(x => x.UserId == currentUserId).Select(x => x.LocationId)
-    .FirstOrDefaultAsync();
+    @* if (_accessor.HttpContext.Session.GetString("sessionKeyLocationId") != null)
+    {
+        var id = _accessor.HttpContext.Session.GetString("sessionKeyLocationId").ToString();
+        vm.LocationID = Convert.ToInt64(id);
+    }
+    else if (currentUserId != null)
+    {
+        vm.LocationID = await _context.UserLocationPreferences.Where(x => x.UserId == currentUserId).Select(x => x.LocationId)
+        .FirstOrDefaultAsync();
+    }
+    else {
+        vm.LocationID = await _context.Locations.Select(x=>x.ID).FirstOrDefaultAsync();
+    } *@
+    vm.LocationID = currentLocationProvider.GetCurrentLocationIDAsync();
 
 }
-<form method="post" action="/public/Location/Select">
+<form method="post" action="/Public/Location/Select">
     <select id="resizing_select" style="background:#3b5d50 ; font-size:14px; color: #ffffff !important; opacity: 0.5;"
         class="border-0 mx-auto my-auto" aria-label="Default select example" name="LocationId"
-        asp-items="@vm.LocationList()" id="change-location">
-        <option selected disabled>Select a genre</option>
+        asp-items="@vm.LocationList()"  onchange="this.form.submit()">
+        @* <option selected disabled>Select a genre</option> *@
     </select>
 </form>
-<script>
-    function clickButton(){
-        document.getElementById("myButton").click();
-    }
-</script> *@

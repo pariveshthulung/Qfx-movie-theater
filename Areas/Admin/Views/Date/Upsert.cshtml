@@ -1,0 +1,31 @@
+@model QFX.ViewModels.DateVm.DateUpsertVm
+<form method="post">
+    <br />
+    <div class="container">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-md-12 mb-5 mb-md-0">
+                            <h2 class="h3 mb-3 text-black">Date</h2>
+                            <div class="p-3 p-lg-5 border bg-white">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <label asp-for="Date" class="text-black">Date <span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" asp-for="Date" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">Add Date</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

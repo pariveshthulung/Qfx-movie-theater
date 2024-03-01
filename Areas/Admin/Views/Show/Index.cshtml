@@ -30,7 +30,7 @@
                                                 MovieTitle
                                             </h5>
                                         </th>
-                                        <th>
+                                        @* <th>
                                             <h5>
                                                 Time
                                             </h5>
@@ -39,7 +39,7 @@
                                             <h5>
                                                 Date
                                             </h5>
-                                        </th>
+                                        </th> *@
                                         <th>
                                             <h5>
                                                 ShowStatus
@@ -84,12 +84,12 @@
                                               <strong class="d-inline-block text-truncate"
                                                     style="max-width: 120px;">@show.Movie.Title</strong>
                                             </td>
-                                            <td>
+                                            @* <td>
                                                 @show.Time.ToShortTimeString()
                                             </td>
                                             <td>
                                                 @show.Date.ToString("dd/MM/yyyy")
-                                            </td>
+                                            </td> *@
 
                                             <td>
                                                 @show.ShowStatus
@@ -119,10 +119,16 @@
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li>
-                                                            <button class="dropdown-item" asp-controller="Movie"
-                                                                asp-action="Update" asp-route-id="@show.ID">
+                                                            <a class="dropdown-item" asp-controller="Show"
+                                                                asp-action="Upsert" asp-route-ShowID="@show.ID">
                                                                 <i class="bi bi-pencil"></i>&nbsp; Edit
-                                                            </button>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" asp-controller="Date"
+                                                                asp-action="Index" asp-route-ShowID="@show.ID">
+                                                                <i class="bi bi-pencil"></i>&nbsp; Add Date & Time
+                                                            </a>
                                                         </li>
                                                         <li>
                                                             @* <a asp-controller="Image" asp-action="AddMovie"

@@ -9,7 +9,7 @@ using QFX.ViewModels.GenreVm;
 
 namespace QFX.Controllers;
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,Employee")]
 public class GenreController : Controller
 {
     private readonly INotyfService _notifyService;

@@ -1,0 +1,72 @@
+@model QFX.ViewModels.DateVm.DateIndexVm
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card shadow" style="width: 100%;">
+                <div class="card-body">
+                    <h3 class="mt-3">@Model.Show.Movie.Title</h3>
+                    <span class="text-dark mb-5">@Model.Show.Audi.Location.CityName : @Model.Show.Audi.Name</span>
+                    <div class="toolbar row my-3">
+                        <div class="row text-center">
+                            @{
+                                if (Model.ShowDate != null)
+                                {
+                                    foreach (var showDate in Model.ShowDate.OrderBy(x => x.Date).DistinctBy(x => x.Date))
+                                    {
+                                        <div class="col-1 dropdown">
+                                            <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <article id="selectDate" class="border rounded-3 date"
+                                                    onclick="ShowHide('UnhideTime')">
+                                                    <p class="m-0 p-0">
+                                                        @showDate.Date.ToString("MMM")<br>
+                                                        @* @DateTime.Now.ToString("MMM") *@
+                                                    </p>
+                                                    <strong>
+                                                        <h2 class="m-0">
+                                                            @showDate.Date.ToString("dd")<br>
+                                                            @* @DateTime.Now.ToString("dd") *@
+
+                                                        </h2>
+                                                    </strong>
+                                                    <p class="m-0 p-0">
+                                                        @showDate.Date.ToString("ddd")<br>
+                                                        @* @DateTime.Now.ToString("ddd") *@
+                                                    </p>
+                                                </article>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li><a class="dropdown-item" asp-action="Upsert"
+                                                        asp-route-ShowDateID="@showDate.ID">edit</a></li>
+                                                <li><a class="dropdown-item" asp-action="Index" asp-controller="Time" asp-route-ShowDateID="@showDate.ID" asp-route-ShowID="@Model.Show.ID">Add Time</a>
+                                                </li>
+                                                <form method="post">
+                                                    <li><Button class="dropdown-item" asp-action="Delete" asp-controller="Date"
+                                                            asp-route-ShowDateID="@showDate.ID">Delete</button></li>
+                                                </form>
+                                            </ul>
+                                        </div>
+                                    }
+                                }
+                            }
+                            <div class="col-1">
+                                <article class="border rounded-3 date">
+                                    <a asp-action="Upsert" asp-controller="Date" asp-route-ShowID="@Model.Show.ID">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="75" height="100"
+                                            fill="currentColor" class="bi bi-plus-lg mx-auto my-auto"
+                                            viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                                        </svg>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

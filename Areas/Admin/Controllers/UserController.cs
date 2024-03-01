@@ -43,7 +43,7 @@ public class UserController : Controller
             user.Name = vm.Name;
             user.Email = vm.Email;
             user.PhoneNo = vm.PhoneNo;
-            user.PasswordHash = vm.Password;
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vm.Password);
             user.LocationID = vm.LocationID;
             user.UserType = UserTypeConstants.Employee;
             _context.Users.Add(user);
@@ -98,8 +98,11 @@ public class UserController : Controller
             return RedirectToAction("Index");
         }
     }
-    public IActionResult Delete(long ID)
+    [HttpPost]
+    public async Task<IActionResult> Delete(long ID)
     {
+        _context.Users.Remove(_context.Users.FirstOrDefault(x=>x.ID==ID));
+        await _context.SaveChangesAsync();
         return RedirectToAction("Index");
     }
 }

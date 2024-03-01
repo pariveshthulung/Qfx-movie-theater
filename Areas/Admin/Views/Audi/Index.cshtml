@@ -1,15 +1,17 @@
 @model QFX.ViewModels.AudiVm.IndexVm
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
+
 <form>
 
     <div class="container">
         <div class="d-flex justify-content-around">
-                    <button asp-controller="Audi" asp-action="Upsert" class="btn btn-primary" >Add</button>
-                </div>
+            <button asp-controller="Audi" asp-action="Upsert" class="btn btn-primary">Add</button>
+        </div>
         <div class="card shadow w-75 text-center mx-auto">
             <div class="card-body text-center">
                 <div class="toolbar row mb-3">
                     <div class="col-12">
-                        <table class="table table-borderless table-hover">
+                        <table id="#audiTable" class="table table-borderless table-hover">
                             <thead>
 
                                 <tr>
@@ -50,7 +52,7 @@
                                         <td class="text-dark">@audi.Location.CityName</td>
                                         <td class="text-dark">@audi.Name</td>
                                         <td class="text-dark">@audi.Row x @audi.Column</td>
-                                        
+
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-md border-0 more-horizontal" type="button"
@@ -92,33 +94,32 @@
                                             </div>
                                         </td>
                                     </tr>
-                                     <!-- Modal -->
-                                                <div class="modal fade" id="exampleModal-@audi.ID" tabindex="-1"
-                                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                                                    Warning!!!
-                                                                </h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Are you sure you want to delete?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Close</button>
-                                                                <button asp-action="Delete" class="btn btn-danger"
-                                                                    asp-controller="Audi" asp-route-id="@audi.ID"
-                                                                    class="dropdown-item">
-                                                                    Delete
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal-@audi.ID" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                                        Warning!!!
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                                 </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button asp-action="Delete" class="btn btn-danger" asp-controller="Audi"
+                                                        asp-route-id="@audi.ID" class="dropdown-item">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
 
                             </tbody>
@@ -132,3 +133,17 @@
     </div>
 
 </form>
+@section scripts {
+    <script>
+		let table = new DataTable('#audiTable');
+	</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+    <script src="/js/audiManagement.js"></script>
+
+    <script>
+        @* $("#audiTable").DataTable().fnDestroy(); *@
+    </script>
+}

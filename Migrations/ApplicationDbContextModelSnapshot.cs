@@ -64,6 +64,29 @@ namespace QFX.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("QFX.Entity.UserLocationPreference", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("LocationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLocationPreferences");
+                });
+
             modelBuilder.Entity("QFX.Models.Audi", b =>
                 {
                     b.Property<long>("ID")
@@ -285,17 +308,11 @@ namespace QFX.Migrations
                     b.Property<long>("AudiID")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<long>("MovieID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ShowStatus")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
@@ -304,6 +321,27 @@ namespace QFX.Migrations
                     b.HasIndex("MovieID");
 
                     b.ToTable("Shows");
+                });
+
+            modelBuilder.Entity("QFX.Models.ShowDate", b =>
+                {
+                    b.Property<long?>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long?>("ID"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("ShowID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ShowID");
+
+                    b.ToTable("ShowDates");
                 });
 
             modelBuilder.Entity("QFX.Models.ShowSeat", b =>
@@ -317,19 +355,40 @@ namespace QFX.Migrations
                     b.Property<long?>("SeatID")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("ShowID")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ShowSeatStatus")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ShowTimeID")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 
                     b.HasIndex("SeatID");
 
-                    b.HasIndex("ShowID");
+                    b.HasIndex("ShowTimeID");
 
                     b.ToTable("ShowSeats");
+                });
+
+            modelBuilder.Entity("QFX.Models.ShowTime", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+
+                    b.Property<long>("ShowDateID")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ShowDateID");
+
+                    b.ToTable("ShowTimes");
                 });
 
             modelBuilder.Entity("QFX.Entity.User", b =>
@@ -339,6 +398,25 @@ namespace QFX.Migrations
                         .HasForeignKey("LocationID");
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("QFX.Entity.UserLocationPreference", b =>
+                {
+                    b.HasOne("QFX.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QFX.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QFX.Models.Audi", b =>
@@ -450,19 +528,41 @@ namespace QFX.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("QFX.Models.ShowDate", b =>
+                {
+                    b.HasOne("QFX.Models.Show", "Show")
+                        .WithMany()
+                        .HasForeignKey("ShowID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Show");
+                });
+
             modelBuilder.Entity("QFX.Models.ShowSeat", b =>
                 {
                     b.HasOne("QFX.Models.Seat", "Seat")
                         .WithMany()
                         .HasForeignKey("SeatID");
 
-                    b.HasOne("QFX.Models.Show", "Show")
+                    b.HasOne("QFX.Models.ShowTime", "ShowTime")
                         .WithMany()
-                        .HasForeignKey("ShowID");
+                        .HasForeignKey("ShowTimeID");
 
                     b.Navigation("Seat");
 
-                    b.Navigation("Show");
+                    b.Navigation("ShowTime");
+                });
+
+            modelBuilder.Entity("QFX.Models.ShowTime", b =>
+                {
+                    b.HasOne("QFX.Models.ShowDate", "ShowDate")
+                        .WithMany()
+                        .HasForeignKey("ShowDateID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShowDate");
                 });
 
             modelBuilder.Entity("QFX.Models.Movie", b =>

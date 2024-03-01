@@ -17,24 +17,44 @@ public class CurrentUserProvider : ICurrentUserProvider
     public async Task<User?> GetCurrentUser()
     {
         var currentUserId = GetCurrentUserId();
-        if(!currentUserId.HasValue) return null;
+        if (!currentUserId.HasValue) return null;
 
         return await _context.Users.FindAsync(currentUserId.Value);
-        
+
     }
     public long? GetCurrentUserId()
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue("ID");
-        if(string.IsNullOrWhiteSpace(userId)){
+        if (string.IsNullOrWhiteSpace(userId))
+        {
             return null;
         }
         return Convert.ToInt64(userId);
     }
 
-    public string GetCurrentUserRole()
+    public string? GetCurrentUserName()
+    {
+        var userId = GetCurrentUserId();
+        if (userId != null)
+        {
+            var userName = _context.Users.Where(x => x.ID == userId).Select(x => x.Name).FirstOrDefault();
+            return userName;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public string? GetCurrentUserRole()
     {
         // var user = _context
-        return "hello;";
+        var userRole = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
+        if (string.IsNullOrWhiteSpace(userRole))
+        {
+            return null;
+        }
+        return userRole;
     }
 
     public bool IsLoggedIn()

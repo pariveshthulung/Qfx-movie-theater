@@ -8,7 +8,7 @@ using QFX.ViewModels.AudiVm;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,Employee")]
 public class AudiController : Controller
 {
     private readonly INotyfService _notifyService;
@@ -51,7 +51,7 @@ public class AudiController : Controller
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
-                _context.Seats.RemoveRange(_context.Seats.Where(x => x.AudiID == ID).ToList());
+                _context.Seats.RemoveRange(await _context.Seats.Where(x => x.AudiID == ID).ToListAsync());
                 await _context.SaveChangesAsync();
 
                 char x = 'A';
@@ -102,7 +102,7 @@ public class AudiController : Controller
         catch (Exception e)
         {
             _notifyService.Error("Operation fails" + e.Message);
-            return View(vm);
+            return Content(e.Message);
         }
     }
     public async Task<IActionResult> Delete(long ID)

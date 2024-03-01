@@ -10,7 +10,7 @@ using QFX.ViewModels.LocationVm;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Roles ="Admin")]
+[Authorize(Roles ="Admin,Employee")]
 public class LocationController : Controller
 {
     private readonly INotyfService _notifyService;

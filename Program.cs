@@ -5,6 +5,7 @@ using QFX;
 using QFX.data;
 using QFX.Manager;
 using QFX.Manager.Interface;
+using QFX.Provider;
 using QFX.Provider.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,9 +28,14 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
 builder.Services.AddScoped<DbContext, ApplicationDbContext>();
 builder.Services.AddScoped<IAuthManager , AuthManager>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+builder.Services.AddScoped<ICurrentLocationProvider, CurrentLocationProvider>();
+// builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
@@ -41,6 +47,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

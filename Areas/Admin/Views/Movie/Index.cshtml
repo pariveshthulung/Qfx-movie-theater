@@ -1,5 +1,7 @@
+
 @using QFX.ViewModels
 @model MovieIndexVm
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
 
 <div class="container">
 <form action="">
@@ -16,7 +18,7 @@
                 <div class="toolbar row mb-3">
                     <div class="col">
                         <form class="form-inline">
-                            <table class="table table-borderless table-hover">
+                            <table id="movieTable" class="table table-borderless table-hover">
                                 <thead class="text-center">
 
                                     <tr>
@@ -182,3 +184,8 @@
     </div>
 </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+    <script src="/js/movieManagement.js"></script>

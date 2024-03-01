@@ -1,0 +1,72 @@
+@model QFX.ViewModels.ShowTimeVM.TimeIndexVm
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card shadow" style="width: 100%;">
+                <div class="card-body">
+                    <h3 class="mt-3">@Model.ShowDate.Date.ToString("MMMM dd dddd")</h3>
+                    <span class="text-dark">
+                         @Model.ShowDate.Show.Audi.Location.CityName :
+                        @Model.ShowDate.Show.Audi.Name</span>
+                        <small>
+                            (@Model.ShowDate.Show.Movie.Title)
+                        </small>
+                    <div class="toolbar row my-3">
+                        <div class="row text-center">
+                            @{
+                                if (Model.ShowDate != null)
+                                {
+                                    foreach (var showTime in Model.ShowTime.OrderBy(x => x.Time))
+                                    {
+                                        <div class="col-2 dropdown">
+                                            <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <article id="selectDate" class="border rounded-3 date">
+                                                    <p class="m-0 p-0">
+                                                        @* @showTime.Time.ToString("HH : mm") *@
+                                                    </p>
+                                                    <strong>
+                                                        <h2 class="m-0">
+                                                            @showTime.Time.ToString("HH : mm")
+                                                        </h2>
+                                                    </strong>
+                                                    <p class="m-0 p-0">
+                                                        @* @showDate.Date.ToString("ddd")<br> *@
+                                                    </p>
+                                                </article>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li><a class="dropdown-item" asp-action="Upsert"
+                                                        asp-route-ShowTimeID="@showTime.ID">edit</a>
+                                                </li>
+                                                <form method="post">
+                                                    <li><Button class="dropdown-item" asp-action="Delete" asp-controller="Time"
+                                                            asp-route-ShowTimeID="@showTime.ID">Delete</button>
+                                                    </li>
+                                                </form>
+                                            </ul>
+                                        </div>
+                                    }
+                                }
+                            }
+                            <div class="col-1">
+                                <article class="border rounded-3 date">
+                                    <a asp-action="Upsert" asp-controller="Time" asp-route-ShowDateID="@Model.ShowDate.ID">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="75" height="47"
+                                            fill="currentColor" class="bi bi-plus-lg mx-auto my-auto"
+                                            viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+                                        </svg>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

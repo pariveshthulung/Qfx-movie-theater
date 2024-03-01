@@ -8,7 +8,7 @@ using QFX.ViewModels.LanguageVm;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,Employee")]
 public class LanguageController : Controller
 {
     private readonly INotyfService _notifyService;

@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <Content Remove="Areas/Admin/Views/Genre/Index.cshtml" />
+    <Content Remove="Areas/Admin/Views/Show/ShowDate.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot/js/audiManagement.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +39,7 @@
 
   <ItemGroup>
     <None Include="Areas/Admin/Views/Genre/Index.cshtml" />
+    <None Include="Areas/Admin/Views/Show/ShowDate.cshtml" />
   </ItemGroup>
 
 </Project>

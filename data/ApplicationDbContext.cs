@@ -7,7 +7,7 @@ namespace QFX.data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {  
+    {
     }
 
     public DbSet<User> Users { get; set; }
@@ -22,6 +22,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Show> Shows { get; set; }
     public DbSet<ShowSeat> ShowSeats { get; set; }
     public DbSet<MovieGenre> MovieGenres { get; set; }
+    public DbSet<ShowDate> ShowDates { get; set; }
+    public DbSet<ShowTime> ShowTimes { get; set; }
 
-    public DbSet<UserLocationPreference> UserLocationPreferences {get;set;}
+    public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
 }

@@ -15,6 +15,7 @@ $(document).ready(function () {
       { data: 'user.Location' , "width": "15%"},
       { data: 'user.CreatedDate' , "width": "15%"},
       { data: 'action' , "width": "15%"}
+      
   ]});
   }
   
