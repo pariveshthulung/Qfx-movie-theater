@@ -58,14 +58,22 @@ public class DateController : Controller
         }
         else
         {
-            var showDate = new ShowDate();
-            showDate.Date = vm.Date;
-            showDate.ShowID = vm.ShowID;
             Id = vm.ShowID;
-            _context.ShowDates.Add(showDate);
-            _notifyService.Success("date Added!!!");
+            var DoDateExist = await _context.ShowDates.AnyAsync(x => x.Date == vm.Date && x.ShowID==vm.ShowID);
+            if (!DoDateExist)
+            {
+                var showDate = new ShowDate();
+                showDate.Date = vm.Date;
+                showDate.ShowID = vm.ShowID;
+                _context.ShowDates.Add(showDate);
+                _notifyService.Success("date Added!!!");
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return RedirectToAction("Index", new { ShowID = Id });
+            }
 
-            await _context.SaveChangesAsync();
         }
         return RedirectToAction("Index", new { ShowID = Id });
     }
@@ -74,7 +82,10 @@ public class DateController : Controller
     public async Task<IActionResult> Delete(long ShowDateID)
     {
         var showDate = _context.ShowDates.FirstOrDefault(x => x.ID == ShowDateID);
+        var showTimeIdS = _context.ShowTimes.Where(x => x.ShowDateID == showDate.ID).Select(x => x.ID).ToList();
         _context.ShowDates.Remove(showDate);
+        _context.ShowTimes.RemoveRange(_context.ShowTimes.Where(x => x.ShowDateID == showDate.ID).ToList());
+        _context.ShowSeats.RemoveRange(_context.ShowSeats.Where(x => showTimeIdS.Contains(x.ID)).ToList());
         await _context.SaveChangesAsync();
         _notifyService.Success("date deleted!!!");
         return RedirectToAction("Index", new { ShowID = showDate.ShowID });

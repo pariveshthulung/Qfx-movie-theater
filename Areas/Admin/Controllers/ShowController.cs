@@ -91,26 +91,25 @@ public class ShowController : Controller
         }
         else
         {
-            var show = new Show();
-            show.ShowStatus = vm.ShowStatus;
+            var DoShowExist = await _context.Shows.AnyAsync(x => x.AudiID == vm.AudiID && x.MovieID == vm.MovieID);
+            if (!DoShowExist)
+            {
+                var show = new Show();
+                show.ShowStatus = vm.ShowStatus;
 
-            show.MovieID = vm.MovieID;
-            show.AudiID = vm.AudiID;
-            _context.Shows.Add(show);
-            await _context.SaveChangesAsync();
-
-            // var seatId = _context.Seats.Where(x => x.AudiID == vm.AudiID).Select(X => X.ID).ToList();
-            // foreach (var id in seatId)
-            // {
-            //     var showSeat = new ShowSeat();
-            //     showSeat.ShowID = show.ID;
-            //     showSeat.SeatID = id;
-            //     showSeat.ShowSeatStatus = SeatStatusConstants.Active;
-            //     _context.ShowSeats.Add(showSeat);
-            //     await _context.SaveChangesAsync();
-            // }
-            _notifyService.Success("Show Added!!");
-            return RedirectToAction("Index");
+                show.MovieID = vm.MovieID;
+                show.AudiID = vm.AudiID;
+                _context.Shows.Add(show);
+                await _context.SaveChangesAsync();
+                _notifyService.Success("Show Added!!");
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                _notifyService.Error("Show exist with same audi and movie!!");
+                
+                return RedirectToAction("Upsert");
+            }
         }
     }
 
