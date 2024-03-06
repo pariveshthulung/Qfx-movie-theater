@@ -156,10 +156,11 @@ public class PublicController : Controller
         return Json(new { data = showTime });
     }
 
-    [HttpPost]
-    public IActionResult GetDate(string text)
+    [HttpGet]
+    public IActionResult GetSeat(long showtimeID)
     {
-        return Json(new { data = text });
+        var ShowSeats = _context.ShowSeats.Where(x=>x.ShowTimeID==showtimeID).Include(x=>x.Seat).ThenInclude(y=>y.Audi).ToList();
+        return Json(new { data = ShowSeats });
     }
 
 }

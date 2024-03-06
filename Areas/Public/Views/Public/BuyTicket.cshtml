@@ -20,7 +20,14 @@
     @* #timeDB{
         cursor: pointer;
     } *@
-  
+    .timeToShine{
+        cursor: pointer;
+
+    }
+  @{
+    var column = 0;
+    var row = 0;
+  }
 </style>
 <div class=" my-3">
     <div class="row" style="margin-left:15px">
@@ -130,10 +137,12 @@
                                         @Model.Show.Audi.Location.CityName
                                     </strong>
                                     &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <article id ="timeDB" class="d-inline">
+                                    <div id ="timeDB" data-show-ids="53" class="timeClass d-inline">
 
-                                    </article>
-                                    @* <span  class="time-frm-db border rounded-3 p-2 date"></span> *@
+                                    </div>
+                                    @* <div id="test" data-show-ids="233">
+
+                                    </div> *@
                                 </div>
                             </div>
                         </div>
@@ -149,7 +158,7 @@
                         <article>
                             <h5><span>2.</span>Pick seat &nbsp; | @Model.Show.Movie.Title</h5>
                         </article>
-                        <div id="seat" class=" row my-5" style="display: none;">
+                        <div id="seat" class=" row my-5">
                             <div class="row mt-3">
                                 <h4 class="text-center">Screen</h4>
                             </div>
@@ -170,6 +179,10 @@
                                     </defs>
                                 </svg>
                             </div>
+                           
+                            <div id="showSeat" class="row mt-5">
+                                
+                            </div>
                             @* <div class="row mt-5">
                                 <div class="platinum">
                                     <small>
@@ -180,9 +193,9 @@
                                     @{
                                         var x = 'A';
 
-                                        for (var i = 1; i <= Model.Shows[0].Audi.Column; i++)
+                                        for (var i = 1; i <= column; i++)
                                         {
-                                            var totalColumn = Model.Shows[0].Audi.Column;
+                                            var totalColumn = column;
 
                                             <table id="myTable" class="w-100">
                                                 <tbody class="">
@@ -212,7 +225,7 @@
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        @for (var j = 1; j <= Model.Shows[0].Audi.Row; j++)
+                                                        @for (var j = 1; j <= row; j++)
                                                         {
                                                             <td id=@x@j class="mx-3 ">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
@@ -268,13 +281,10 @@
                 }
             }));
 
-    // ]]></script>
-<script>
     function toggleTime() {
         var comp = document.querySelector("")
     }
-</script>
-<script>
+
     
     $(".date-frm-db").click(function() {
     var date = $(this).val();
@@ -292,30 +302,125 @@
             time1 = value.time;
             console.log(time1);
             out += `
-            @* <button style:"width:5px" class="border-0"> *@
-                @* <span class="timeToShine border rounded-3 p-2 text-dark">${value.time.slice(11,16)} <input class="timeToShinw" value="${value.id}" hidden></span>                                    *@
-                 @* &nbsp; &nbsp;  *@
-                 
-                @* </button> *@
-            <button type="button"  class="timeToShine border border-3 " value="hello">${value.time.slice(11,16)}
-                </button>
-
-                
+                <button class="timeSpan border rounded-3 p-2 text-dark" data-show-ids="${value.id}">${value.time.slice(11,16)}</button>                                 
+                 &nbsp; &nbsp;    
             `;
             
         });
         document.getElementById("timeDB").innerHTML = out;
+
+        var countTime = timelist.length;
+
+for(var i = 0; i<countTime; i++){
+    timelist[i].addEventListener("click",myfunction=>{
+        @* alert(this.dataset.showIds); *@
+        const showtimeId = event.target.dataset.showIds;
+        const timeUrl = "/Public/Public/GetSeat?showtimeID="+ showtimeId;
+        fetch(timeUrl).then((res)=>{
+            return res.json()
+        }).then((data)=>{
+            console.log(data);
+            column = data.data[0].seat.audi.column;
+            row = data.data[0].seat.audi.row;
+            console.log(column);
+            console.log(row);
+             let placeholder = $("showSeat");
+            let display = "";
+            data.data.map((value)=>{
+                console.log(value);
+                column = value.seat.audi.column;
+                row = value.seat.audi.column; 
+            
+                display = `
+                <div class="platinum">
+                                    <small>
+                                        <span class="d-block text-center">PLATINUM NRP 300.00</span>
+                                    </small>
+                                
+
+                                    
+                                        @@var x = 'A';
+
+                                        @@for (var i = 1; i <=${value.seat.audi.column} ; i++)
+                                        {
+                                            var totalColumn = ${value.seat.audi.column};
+
+                                            <table id="myTable" class="w-100">
+                                                <tbody class="">
+                                                    @@if (i == totalColumn - 2)
+                                                    {
+                                                        <div class="mt-5">
+
+                                                            <small>
+                                                                <span class="d-block text-center">Premium NRP 450.00</span>
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                    @@if (i == totalColumn - 1)
+                                                    {
+                                                        <div class="mt-5">
+
+                                                            <small>
+                                                                <span class="d-block text-center">Platinum NRP 300.00</span>
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                    <tr class="mx-auto">
+                                                        <td class="w-25">
+                                                            <div>
+                                                                <span class="p-1 m-1">
+                                                                    x
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        @@for (var j = 1; j <= ${value.seat.audi.row}; j++)
+                                                        {
+                                                            <td id=@@x@@j class="mx-3 ">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                                                    fill="currentColor" class=" mx-1 bi bi-archive-fill"
+                                                                    viewBox="0 0 16 16">
+                                                                    <path
+                                                                        d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
+                                                                </svg>
+                                                                <span style="margin-left:10px ;" class="d-block"></span>
+                                                            </td>
+
+                                                        }
+                                                    </tr>
+                                                    <br>
+                                                </tbody>
+                                            </table>
+                                            @@x++;
+                                        }
+                                    }
+                                </div>`;
+            @* }); *@
+             }); 
+            console.log(display);
+                                document.getElementById("showSeat").innerHTML = display;
+        }).catch((error)=>{
+            console.log(error)
+        });
+        
+    });
+    console.log(timelist[i].innerHTML);
+}
+@* function myfunction(){
+    alert("hello");
+
+} *@
+        
     }).catch((error)=>{
         console.log(error)});
+
+        const timelist = document.getElementsByClassName("timeSpan");
+@* alert(timelist); *@
+
 });
 
-@* $(".timeToShine").click(function(){
-    alert(this.val());
-    console.log(this.val());
-}) *@
 
-    
-    
-    
-        
+
+
+
 </script>
+    
