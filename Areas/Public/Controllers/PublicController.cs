@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QFX.data;
 using QFX.Migrations;
-using QFX.Models;
 using QFX.Provider.Interface;
-using QFX.Session;
 using QFX.ViewModels.PublicVm;
+using QFX.ViewModels.TicketVm;
 
 namespace QFX.Areas.Public.Controllers;
 [Area("Public")]
@@ -99,7 +98,7 @@ public class PublicController : Controller
         var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
 
         var audiID = _context.Audis.Where(x => x.LocationID == currentLocationId).Select(x => x.ID).ToList();
-        vm.Show = await _context.Shows.Where(x => x.ID==ShowID).Include(x => x.Movie)
+        vm.Show = await _context.Shows.Where(x => x.ID == ShowID).Include(x => x.Movie)
                         .ThenInclude(y => y.MovieGenres)
                             .ThenInclude(z => z.Genre).Include(x => x.Movie).ThenInclude(y => y.Language)
                     .Include(x => x.Audi)
@@ -112,7 +111,7 @@ public class PublicController : Controller
         // vm.ShowTime = await _context.ShowTimes.Include(x => x.ShowDate).ThenInclude(y => y.Show).ThenInclude(x => x.Movie).ThenInclude(x => x.MovieGenres).ThenInclude(x => x.Genre).Where(x => audiID.Contains(x.ShowDate.Show.AudiID)).Where(x => x.ShowDate.Show.MovieID == MovieID)
         //     .Include(x => x.ShowDate).ThenInclude(x => x.Show).ThenInclude(x => x.Movie).ThenInclude(x => x.Language)
         //     .Include(x => x.ShowDate).ThenInclude(x => x.Show).ThenInclude(x => x.Audi).ThenInclude(x => x.Location).ToListAsync();
-        vm.ShowDates = _context.ShowDates.Where(x=>x.ShowID==ShowID).ToList();
+        vm.ShowDates = _context.ShowDates.Where(x => x.ShowID == ShowID).ToList();
         // vm.Shows = await _context.Shows.Where(x => x.ID == ShowID)
         //             .Include(x => x.Movie)
         //                 .ThenInclude(y => y.MovieGenres)
@@ -140,10 +139,20 @@ public class PublicController : Controller
         return View(vm);
     }
 
+    public async Task<IActionResult> MyTicket()
+    {
+        var currentUserID = _currentUser.GetCurrentUserId();
+        var vm = new TicketIndexVm();
+        
+        vm.Reservations = await _context.Reservations.Where(x => x.UserID == currentUserID).ToListAsync();
 
-    
+        return View(vm);
+    }
+
+
+
     [HttpGet]
-    public async Task<IActionResult> GetTime(string date,long showID)
+    public async Task<IActionResult> GetTime(string date, long showID)
     {
         // var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
 
@@ -151,15 +160,15 @@ public class PublicController : Controller
         DateTime dateTime = DateTime.Parse(date);
         var dates = _context.ShowDates.ToList();
         // var showDatesList = _context.ShowDates.Include(x=>x.Show).Where(x=>x.Date==dateTime && audiID.Contains(x.Show.AudiID)).ToList();
-        var showDateIDs = _context.ShowDates.Include(x=>x.Show).Where(x=>x.Date==dateTime && x.ShowID==showID).Select(x=>x.ID).ToList();
-        var showTime = await _context.ShowTimes.Where(x=>showDateIDs.Contains(x.ShowDateID)).ToListAsync();
+        var showDateIDs = _context.ShowDates.Include(x => x.Show).Where(x => x.Date == dateTime && x.ShowID == showID).Select(x => x.ID).ToList();
+        var showTime = await _context.ShowTimes.Where(x => showDateIDs.Contains(x.ShowDateID)).ToListAsync();
         return Json(new { data = showTime });
     }
 
     [HttpGet]
     public IActionResult GetSeat(long showtimeID)
     {
-        var ShowSeats = _context.ShowSeats.Where(x=>x.ShowTimeID==showtimeID).Include(x=>x.Seat).ThenInclude(y=>y.Audi).ToList();
+        var ShowSeats = _context.ShowSeats.Where(x => x.ShowTimeID == showtimeID).Include(x => x.Seat).ThenInclude(y => y.Audi).ToList();
         return Json(new { data = ShowSeats });
     }
 

@@ -13,16 +13,25 @@
         color: white;
         cursor: pointer;
     }
+    .date-selected{
+        background-color: #9195F6;
+        color: white;
+    }
 
     .selected-seat {
         color: #FFD23F;
     }
-    @* #timeDB{
-        cursor: pointer;
-    } *@
-    .timeToShine{
-        cursor: pointer;
-
+    .reserved{
+        filter: invert(75%) sepia(29%) saturate(7127%) hue-rotate(203deg) brightness(99%) contrast(95%);
+    }
+    .selected{
+filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104%) contrast(112%);
+    }
+    .sold-out{
+filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104%) contrast(112%);
+}
+    .unavailable{
+        filter: opacity(50%);
     }
   @{
     var column = 0;
@@ -103,7 +112,7 @@
                                         @{
                                             foreach (var showDate in Model.ShowDates.OrderBy(x => x.Date))
                                             {
-                                                <div  class="col-3 calendar_comp" >
+                                                <div  class="col-3" >
                                                 <button class="date-frm-db border-0 rounded-3 d-inline p-0 m-2" value="@showDate.Date" >
                                                     <article id="selectDate" class="border rounded-3 date p-1">
                                                         <p class="m-0 p-0">
@@ -131,7 +140,7 @@
                             </div>
                             <hr>
 
-                            <div id="UnhideTime" class="row">
+                            <div id="displayTime" class="row" >
                                 <div class="time-div">
                                     <strong>
                                         @Model.Show.Audi.Location.CityName
@@ -183,6 +192,67 @@
                             <div id="showSeat" class="row mt-5">
                                 
                             </div>
+                        <div class="">
+
+                            <div class="row d-flex justify-content-center" >
+
+                                <div class="col-2 text-center">
+                                    <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                    <br>
+                                    <span>
+                                        <small>
+                                            Available
+                                        </small>
+                                    </span>
+                                </div>
+                                <div class="col-2 text-center ">
+                                    <img class="reserved" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                    <br>
+                                    <span>
+                                        <small>
+                                            Reserved
+                                        </small>
+                                    </span>
+                                </div>
+                                <div class="col-2 text-center ">
+                                    <img class="sold-out" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                    <br>
+                                    <span>
+                                        <small>
+                                            Sold out
+                                        </small>
+                                    </span>
+                                </div>
+                                <div class="col-2 text-center ">
+                                    <img class="selected" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                    <br>
+                                    <span>
+                                        <small>
+                                            Selected
+                                        </small>
+                                    </span>
+                                </div>
+                                <div class="col-2 text-center ">
+                                    <img class="unavailable" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                    <br>
+                                    <span>
+                                        <small>
+                                            Unavailable
+                                        </small>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                            
+                        <div class="row d-flex justify-content-center mt-5">
+                            <div class="col-2">
+                                <button class="btn btn-secondary p-1 border rounded-3 "  style="margin-left:30px" asp-action="Index" asp-controller="CheckOut" asp-route-showTimeID="@Model.ShowTimeID" asp-route-ShowID="@Model.Show.ID">
+                                    Buy now
+                                </button>
+                            </div>
+                        </div>
+                            
                             @* <div class="row mt-5">
                                 <div class="platinum">
                                     <small>
@@ -285,6 +355,16 @@
         var comp = document.querySelector("")
     }
 
+    //select-date
+    const displayTime = document.querySelector('#displayTime');
+    displayTime.style.display = displayTime.style.display === 'none' ? '' : 'none';
+    document.querySelectorAll('.date')
+        .forEach(e=>e.addEventListener("click",function(){
+            $('.date').not($(this)).removeClass("date-selected");
+            e.classList.toggle("date-selected");
+            $("#displayTime").toggle();
+            
+        }));
     
     $(".date-frm-db").click(function() {
     var date = $(this).val();
@@ -313,8 +393,10 @@
 
 for(var i = 0; i<countTime; i++){
     timelist[i].addEventListener("click",myfunction=>{
-        @* alert(this.dataset.showIds); *@
+         //get showTimeId from div to fetch ShowSeat based on ShowTimeID
         const showtimeId = event.target.dataset.showIds;
+        //set value to vm
+        @* @Model.ShowTimeID = showtimeId; *@
         const timeUrl = "/Public/Public/GetSeat?showtimeID="+ showtimeId;
         fetch(timeUrl).then((res)=>{
             return res.json()
@@ -337,17 +419,18 @@ for(var i = 0; i<countTime; i++){
                                         <span class="d-block text-center">PLATINUM NRP 300.00</span>
                                     </small>
                                 
-
                                     
-                                        @@var x = 'A';
+                                    
 
-                                        @@for (var i = 1; i <=${value.seat.audi.column} ; i++)
+                                        var x = 'A';
+
+                                        for (var i = 1; i <=column ; i++)
                                         {
-                                            var totalColumn = ${value.seat.audi.column};
+                                            var totalColumn = column;
 
                                             <table id="myTable" class="w-100">
                                                 <tbody class="">
-                                                    @@if (i == totalColumn - 2)
+                                                    if (i == totalColumn - 2)
                                                     {
                                                         <div class="mt-5">
 
@@ -356,7 +439,7 @@ for(var i = 0; i<countTime; i++){
                                                             </small>
                                                         </div>
                                                     }
-                                                    @@if (i == totalColumn - 1)
+                                                    if (i == totalColumn - 1)
                                                     {
                                                         <div class="mt-5">
 
@@ -373,9 +456,9 @@ for(var i = 0; i<countTime; i++){
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        @@for (var j = 1; j <= ${value.seat.audi.row}; j++)
+                                                        for (var j = 1; j <= row; j++)
                                                         {
-                                                            <td id=@@x@@j class="mx-3 ">
+                                                            <td id=xj class="mx-3 ">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
                                                                     fill="currentColor" class=" mx-1 bi bi-archive-fill"
                                                                     viewBox="0 0 16 16">
@@ -390,9 +473,12 @@ for(var i = 0; i<countTime; i++){
                                                     <br>
                                                 </tbody>
                                             </table>
-                                            @@x++;
+                                            x++;
                                         }
-                                    }
+                                    
+                                    
+                                    
+
                                 </div>`;
             @* }); *@
              }); 
@@ -405,17 +491,11 @@ for(var i = 0; i<countTime; i++){
     });
     console.log(timelist[i].innerHTML);
 }
-@* function myfunction(){
-    alert("hello");
-
-} *@
         
     }).catch((error)=>{
         console.log(error)});
 
         const timelist = document.getElementsByClassName("timeSpan");
-@* alert(timelist); *@
-
 });
 
 

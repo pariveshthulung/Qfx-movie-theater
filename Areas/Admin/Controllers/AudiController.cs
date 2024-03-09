@@ -59,6 +59,9 @@ public class AudiController : Controller
                 {
                     for (var j = 1; j <= vm.Row; j++)
                     {
+                        if(j==vm.Row-3){
+                        
+                        }
                         var seat = new Seat();
                         seat.SeatName = x.ToString() + j;
                         seat.AudiID = audi.ID;

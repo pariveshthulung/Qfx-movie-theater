@@ -12,4 +12,8 @@ public class ShowSeat
     public long? SeatID { get; set; }
     [ForeignKey("SeatID")]
     public virtual Seat? Seat { get; set; }
+
+    internal class List
+    {
+    }
 }

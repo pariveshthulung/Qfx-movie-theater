@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using QFX.data;
 using QFX.Entity;
 using QFX.Provider.Interface;
-using QFX.Session;
 using Microsoft.AspNetCore.Authorization;
 
 
