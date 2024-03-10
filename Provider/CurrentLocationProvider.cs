@@ -2,6 +2,7 @@
 using QFX.data;
 using QFX.Provider.Interface;
 
+
 namespace QFX.Provider;
 
 public class CurrentLocationProvider : ICurrentLocationProvider

@@ -33,10 +33,6 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
     .unavailable{
         filter: opacity(50%);
     }
-  @{
-    var column = 0;
-    var row = 0;
-  }
 </style>
 <div class=" my-3">
     <div class="row" style="margin-left:15px">
@@ -78,16 +74,13 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                         <strong>Cast:</strong>@Model.Show.Movie.Language.Name
                     </div>
                     <p class="text-center"><button class="border-0" style="color: #9195F6;" id="readMore"
-                            onclick="javascript:ShowHide('HiddenDiv')">read more</button></p>
-
+                            onclick="javascript:ShowHide('HiddenDiv')">read more</button>
+                    </p>
                 </small>
             </div>
         </div>
         <div class="col-9">
             <div class="card">
-                @* <div class="card-header">
-                <h2>Now Showing</h2>
-                </div> *@
                 <div class="card-body">
                     <div class="mx-5">
                         <article>
@@ -110,23 +103,23 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
 
                                     <div class="row text-center">
                                         @{
-                                            foreach (var showDate in Model.ShowDates.OrderBy(x => x.Date))
+                                            foreach (var showDate in Model.ShowDates.DistinctBy(x=>x.Date).OrderBy(x => x.Date))
                                             {
                                                 <div  class="col-3" >
-                                                <button class="date-frm-db border-0 rounded-3 d-inline p-0 m-2" value="@showDate.Date" >
-                                                    <article id="selectDate" class="border rounded-3 date p-1">
-                                                        <p class="m-0 p-0">
-                                                            @showDate.Date.ToString("MMM")<br>
-                                                        </p>
-                                                        <strong>
-                                                            <h2 class="m-0">
-                                                                @showDate.Date.ToString("dd")<br>
-                                                            </h2>
-                                                        </strong>
-                                                        <p class="m-0 p-0">@showDate.Date.ToString("ddd")</p>
-                                                        <p hidden>@showDate.Date</p>
-                                                    </article>
-                                                </button>
+                                                    <button class="date-frm-db border-0 rounded-3 d-inline p-0 m-2" value="@showDate.Date" >
+                                                        <article id="selectDate" class="border rounded-3 date p-1">
+                                                            <p class="m-0 p-0">
+                                                                @showDate.Date.ToString("MMM")<br>
+                                                            </p>
+                                                            <strong>
+                                                                <h2 class="m-0">
+                                                                    @showDate.Date.ToString("dd")<br>
+                                                                </h2>
+                                                            </strong>
+                                                            <p class="m-0 p-0">@showDate.Date.ToString("ddd")</p>
+                                                            <p hidden>@showDate.Date</p>
+                                                        </article>
+                                                    </button>
                                                 </div>
                                             }
                                         }
@@ -188,135 +181,73 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                                     </defs>
                                 </svg>
                             </div>
-                           
+
                             <div id="showSeat" class="row mt-5">
-                                
+                                 @* seat render from js *@
                             </div>
-                        <div class="">
+                            <div class="mt-5">
 
-                            <div class="row d-flex justify-content-center" >
+                                <div class=" mt-5 row d-flex justify-content-center" >
 
-                                <div class="col-2 text-center">
-                                    <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
-                                    <br>
-                                    <span>
-                                        <small>
-                                            Available
-                                        </small>
-                                    </span>
-                                </div>
-                                <div class="col-2 text-center ">
-                                    <img class="reserved" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
-                                    <br>
-                                    <span>
-                                        <small>
-                                            Reserved
-                                        </small>
-                                    </span>
-                                </div>
-                                <div class="col-2 text-center ">
-                                    <img class="sold-out" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
-                                    <br>
-                                    <span>
-                                        <small>
-                                            Sold out
-                                        </small>
-                                    </span>
-                                </div>
-                                <div class="col-2 text-center ">
-                                    <img class="selected" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
-                                    <br>
-                                    <span>
-                                        <small>
-                                            Selected
-                                        </small>
-                                    </span>
-                                </div>
-                                <div class="col-2 text-center ">
-                                    <img class="unavailable" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
-                                    <br>
-                                    <span>
-                                        <small>
-                                            Unavailable
-                                        </small>
-                                    </span>
-                                </div>
+                                    <div class="col-2 text-center">
+                                        <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <br>
+                                        <span>
+                                            <small>
+                                                Available
+                                            </small>
+                                        </span>
+                                    </div>
+                                    <div class="col-2 text-center ">
+                                        <img class="reserved" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <br>
+                                        <span>
+                                            <small>
+                                                Reserved
+                                            </small>
+                                        </span>
+                                    </div>
+                                    <div class="col-2 text-center ">
+                                        <img class="sold-out" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <br>
+                                        <span>
+                                            <small>
+                                                Sold out
+                                            </small>
+                                        </span>
+                                    </div>
+                                    <div class="col-2 text-center ">
+                                        <img class="selected" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <br>
+                                        <span>
+                                            <small>
+                                                Selected
+                                            </small>
+                                        </span>
+                                    </div>
+                                    <div class="col-2 text-center ">
+                                        <img class="unavailable" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <br>
+                                        <span>
+                                            <small>
+                                                Unavailable
+                                            </small>
+                                        </span>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
-                            
-                        <div class="row d-flex justify-content-center mt-5">
-                            <div class="col-2">
-                                <button class="btn btn-secondary p-1 border rounded-3 "  style="margin-left:30px" asp-action="Index" asp-controller="CheckOut" asp-route-showTimeID="@Model.ShowTimeID" asp-route-ShowID="@Model.Show.ID">
-                                    Buy now
-                                </button>
-                            </div>
-                        </div>
-                            
-                            @* <div class="row mt-5">
-                                <div class="platinum">
-                                    <small>
-                                        <span class="d-block text-center">PLATINUM NRP 300.00</span>
-                                    </small>
-                                
 
-                                    @{
-                                        var x = 'A';
-
-                                        for (var i = 1; i <= column; i++)
-                                        {
-                                            var totalColumn = column;
-
-                                            <table id="myTable" class="w-100">
-                                                <tbody class="">
-                                                    @if (i == totalColumn - 2)
-                                                    {
-                                                        <div class="mt-5">
-
-                                                            <small>
-                                                                <span class="d-block text-center">Premium NRP 450.00</span>
-                                                            </small>
-                                                        </div>
-                                                    }
-                                                    @if (i == totalColumn - 1)
-                                                    {
-                                                        <div class="mt-5">
-
-                                                            <small>
-                                                                <span class="d-block text-center">Platinum NRP 300.00</span>
-                                                            </small>
-                                                        </div>
-                                                    }
-                                                    <tr class="mx-auto">
-                                                        <td class="w-25">
-                                                            <div>
-                                                                <span class="p-1 m-1">
-                                                                    @x
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        @for (var j = 1; j <= row; j++)
-                                                        {
-                                                            <td id=@x@j class="mx-3 ">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                                    fill="currentColor" class=" mx-1 bi bi-archive-fill"
-                                                                    viewBox="0 0 16 16">
-                                                                    <path
-                                                                        d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
-                                                                </svg>
-                                                                <span style="margin-left:10px ;" class="d-block"></span>
-                                                            </td>
-
-                                                        }
-                                                    </tr>
-                                                    <br>
-                                                </tbody>
-                                            </table>
-                                            x++;
-                                        }
-                                    }
+                            <div class="row d-flex justify-content-center mt-5">
+                                <div class="col-2">
+                                    <form action="">
+                                        <button class="btn btn-secondary p-1 border rounded-3 "  style="margin-left:30px" asp-action="Index" asp-controller="CheckOut" asp-route-showTimeID="@Model.ShowTimeID" asp-route-ShowID="@Model.Show.ID">
+                                            Buy now
+                                            <input type="text" id="SelectedID" name="SelectedID" value="" hidden>
+                                        </button>
+                                    </form>
                                 </div>
-                            </div> *@
+                            </div>
                         </div>
                     </div>
 
@@ -341,19 +272,17 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
         }
     }
 
-        document.querySelectorAll('#myTable td')
-            .forEach(e => e.addEventListener("click", function () {
-                e.classList.toggle("selected-seat");
-            if (e.lastElementChild.innerHTML === this.id) {
-                    e.lastElementChild.innerHTML = "";
-                } else {
-                    e.lastElementChild.innerHTML = this.id;
-                }
-            }));
+    var test = [1,2,3,4];
+    $("#selectedID").val(test);
+
 
     function toggleTime() {
         var comp = document.querySelector("")
     }
+    //next character
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt() + 1);
+}
 
     //select-date
     const displayTime = document.querySelector('#displayTime');
@@ -363,13 +292,14 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
             $('.date').not($(this)).removeClass("date-selected");
             e.classList.toggle("date-selected");
             $("#displayTime").toggle();
-            
+
         }));
-    
+
     $(".date-frm-db").click(function() {
+        
     var date = $(this).val();
-    var showID = @Model.Show.ID;
-    var url = "/Public/Public/GetTime?date="+ date +"&showID=" + showID;
+    var movieID = @Model.Show.Movie.ID;
+    var url = "/Public/Public/GetTime?date="+ date +"&movieID=" + movieID;
     fetch(url)
     .then((res)=>{
         return res.json()
@@ -385,7 +315,7 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                 <button class="timeSpan border rounded-3 p-2 text-dark" data-show-ids="${value.id}">${value.time.slice(11,16)}</button>                                 
                  &nbsp; &nbsp;    
             `;
-            
+
         });
         document.getElementById("timeDB").innerHTML = out;
 
@@ -396,102 +326,68 @@ for(var i = 0; i<countTime; i++){
          //get showTimeId from div to fetch ShowSeat based on ShowTimeID
         const showtimeId = event.target.dataset.showIds;
         //set value to vm
-        @* @Model.ShowTimeID = showtimeId; *@
+    @* @Model.ShowTimeID = showtimeId; *@
         const timeUrl = "/Public/Public/GetSeat?showtimeID="+ showtimeId;
         fetch(timeUrl).then((res)=>{
             return res.json()
         }).then((data)=>{
             console.log(data);
-            column = data.data[0].seat.audi.column;
-            row = data.data[0].seat.audi.row;
+            var column = data.data[0].seat.audi.column;
+            var row = data.data[0].seat.audi.row;
             console.log(column);
             console.log(row);
              let placeholder = $("showSeat");
             let display = "";
-            data.data.map((value)=>{
-                console.log(value);
-                column = value.seat.audi.column;
-                row = value.seat.audi.column; 
-            
-                display = `
-                <div class="platinum">
-                                    <small>
-                                        <span class="d-block text-center">PLATINUM NRP 300.00</span>
-                                    </small>
-                                
-                                    
-                                    
+            display=display+"<div class='platinum'><small><span class='d-block text-center'>PLATINUM NRP 300.00</span></small>";
 
-                                        var x = 'A';
+                        var x = 'A';
 
-                                        for (var i = 1; i <=column ; i++)
+                        for (var i = 1; i <=column ; i++)
+                        {
+                            var totalColumn = column;
+
+                            display+="<table id='myTable' class='w-100'><tbody >";
+                                    if (i == totalColumn - 2)
+                                    {
+                                        display+="<div class='mt-5'><small><span class='d-block text-center'>Premium NRP 450.00</span></small></div>";
+                                    }
+                                    if (i == totalColumn - 1)
+                                    {
+                                        display+="<div class='mt-5'><small><span class='d-block text-center'>Platinum NRP 300.00</span></small></div>";
+                                    }
+                                    display+=`<tr class='mx-auto'><td><div><span style='margin:auto;display:block;' class='p-1 m-1 text-center'>${x}</span></div></td>`;
+                                        for (var j = 1; j <= row; j++)
                                         {
-                                            var totalColumn = column;
+                                            display+=`<td id='${x}${j}' class="mx-3 ">
+                                                <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
+                                                <span class="d-block text-center"></span>
+                                            </td>`;
 
-                                            <table id="myTable" class="w-100">
-                                                <tbody class="">
-                                                    if (i == totalColumn - 2)
-                                                    {
-                                                        <div class="mt-5">
-
-                                                            <small>
-                                                                <span class="d-block text-center">Premium NRP 450.00</span>
-                                                            </small>
-                                                        </div>
-                                                    }
-                                                    if (i == totalColumn - 1)
-                                                    {
-                                                        <div class="mt-5">
-
-                                                            <small>
-                                                                <span class="d-block text-center">Platinum NRP 300.00</span>
-                                                            </small>
-                                                        </div>
-                                                    }
-                                                    <tr class="mx-auto">
-                                                        <td class="w-25">
-                                                            <div>
-                                                                <span class="p-1 m-1">
-                                                                    x
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        for (var j = 1; j <= row; j++)
-                                                        {
-                                                            <td id=xj class="mx-3 ">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                                    fill="currentColor" class=" mx-1 bi bi-archive-fill"
-                                                                    viewBox="0 0 16 16">
-                                                                    <path
-                                                                        d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z" />
-                                                                </svg>
-                                                                <span style="margin-left:10px ;" class="d-block"></span>
-                                                            </td>
-
-                                                        }
-                                                    </tr>
-                                                    <br>
-                                                </tbody>
-                                            </table>
-                                            x++;
                                         }
-                                    
-                                    
-                                    
+                                    display+="</tr><br></tbody></table>";
+                           x= nextChar(x);
+                        }
+                display+="</div>";
+                document.getElementById("showSeat").innerHTML = display;
 
-                                </div>`;
-            @* }); *@
-             }); 
-            console.log(display);
-                                document.getElementById("showSeat").innerHTML = display;
+                document.querySelectorAll('#myTable td')
+        .forEach(e => e.addEventListener("click", function () {
+            alert("clicked")
+            e.classList.toggle("selected");
+        if (e.lastElementChild.innerHTML === this.id) {
+                e.lastElementChild.innerHTML = "";
+            } else {
+                e.lastElementChild.innerHTML = this.id;
+            }
+        }));
         }).catch((error)=>{
             console.log(error)
         });
-        
+
     });
     console.log(timelist[i].innerHTML);
 }
-        
+
     }).catch((error)=>{
         console.log(error)});
 
@@ -502,5 +398,6 @@ for(var i = 0; i<countTime; i++){
 
 
 
+
+
 </script>
-    

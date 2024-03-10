@@ -25,17 +25,19 @@ public class CheckOut : Controller
         _currentUser = currentUserProvider;
     }
 
-    public IActionResult Index(List<long>? ID, long showTimeID, long showID)
+    public IActionResult Index(int[] selectedID,long showTimeID, long showID)
     {
-        TempData["showSeats"] = ID;
+        // TempData["showSeats"] = ID;
         var vm = new IndexVm
         {
             PlatinumPrice = 200,
             PremiumPrice = 400,
             ShowTimeID = showTimeID,
             ShowID = showID,
-            ShowSeats = _context.ShowSeats.Where(x => ID.Contains(x.ID)).Include(x => x.Seat).ToList()
+            // ShowSeats = _context.ShowSeats.Where(x => ID.Contains(x.ID)).Include(x => x.Seat).ToList()
         };
+        // var id = selectedID;
+
         return View(vm);
     }
 
