@@ -25,18 +25,25 @@ public class CheckOut : Controller
         _currentUser = currentUserProvider;
     }
 
-    public IActionResult Index(int[] selectedID,long showTimeID, long showID)
+    public IActionResult Post([FromBody] PostVm vm)
     {
-        // TempData["showSeats"] = ID;
-        var vm = new IndexVm
+        if (vm == null)
         {
-            PlatinumPrice = 200,
-            PremiumPrice = 400,
-            ShowTimeID = showTimeID,
-            ShowID = showID,
-            // ShowSeats = _context.ShowSeats.Where(x => ID.Contains(x.ID)).Include(x => x.Seat).ToList()
-        };
-        // var id = selectedID;
+            return BadRequest("Invalid request data");
+        }
+        return RedirectToAction("Index", "CheckOut", vm);
+        // return Index(vm);
+    }
+    public IActionResult Index(PostVm vm)
+    {
+        //  var vm2= new IndexVm
+        // {
+        //     PlatinumPrice = 200,
+        //     PremiumPrice = 400,
+        //     ShowTimeID = vm.ShowTimeID,
+        //     ShowID = vm.ShowID,
+        //     ShowSeats = _context.ShowSeats.Where(x => vm.SeatID.Contains(x.ID)).Include(x => x.Seat).ToList()
+        // };
 
         return View(vm);
     }

@@ -17,9 +17,14 @@
         background-color: #9195F6;
         color: white;
     }
-
-    .selected-seat {
-        color: #FFD23F;
+    .dateTime-hide{
+        display: none;
+        transition-delay: 1s;
+        
+    }
+    .edit{
+        color: #9195F6; 
+        cursor: pointer;
     }
     .reserved{
         filter: invert(75%) sepia(29%) saturate(7127%) hue-rotate(203deg) brightness(99%) contrast(95%);
@@ -84,10 +89,10 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                 <div class="card-body">
                     <div class="mx-5">
                         <article>
-                            <h5><span>1.</span>Select Date and time slots</h5>
+                            <h5><span>1.</span>Select Date and time slots <span id="sectionDate"></span></h5>
                         </article>
 
-                        <div class="dateTime">
+                        <div  id="dateTime">
                             <br>
                             <span>Select Date</span>
                             <div class="row">
@@ -158,9 +163,13 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                 <div class="card-body">
                     <div class="mx-5">
                         <article>
-                            <h5><span>2.</span>Pick seat &nbsp; | @Model.Show.Movie.Title</h5>
+                            <h5 class="">
+                                <span class="">2.</span>Pick seat &nbsp; | @Model.Show.Movie.Title 
+                                <span id="section-2"></span>
+                            
+                            </h5>
                         </article>
-                        <div id="seat" class=" row my-5">
+                        <div id="seat" class="d-none row my-5">
                             <div class="row mt-3">
                                 <h4 class="text-center">Screen</h4>
                             </div>
@@ -241,9 +250,8 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                             <div class="row d-flex justify-content-center mt-5">
                                 <div class="col-2">
                                     <form action="">
-                                        <button class="btn btn-secondary p-1 border rounded-3 "  style="margin-left:30px" asp-action="Index" asp-controller="CheckOut" asp-route-showTimeID="@Model.ShowTimeID" asp-route-ShowID="@Model.Show.ID">
+                                        <button id="buy-now" class="btn btn-secondary p-1 border rounded-3 "  style="margin-left:30px">
                                             Buy now
-                                            <input type="text" id="SelectedID" name="SelectedID" value="" hidden>
                                         </button>
                                     </form>
                                 </div>
@@ -294,9 +302,9 @@ function nextChar(c) {
             $("#displayTime").toggle();
 
         }));
+   
 
     $(".date-frm-db").click(function() {
-        
     var date = $(this).val();
     var movieID = @Model.Show.Movie.ID;
     var url = "/Public/Public/GetTime?date="+ date +"&movieID=" + movieID;
@@ -305,6 +313,8 @@ function nextChar(c) {
         return res.json()
     }).then((data)=>{ 
         console.log(data)
+        const checkShowId = data.data[0].showDate.showID;
+        
         let placeholder = $("timeDB");
                 let out = "";
         data.data.map((value)=>{
@@ -323,6 +333,25 @@ function nextChar(c) {
 
 for(var i = 0; i<countTime; i++){
     timelist[i].addEventListener("click",myfunction=>{
+        $("#seat").removeClass("d-none");
+        $("#dateTime").addClass("d-none")
+        var sliceDate = date.slice(0,8);
+        var clickDate = new Date(sliceDate);
+        const formattedDate = clickDate.toLocaleString("en-GB", {
+            weekday: 'long',
+  day: "numeric",
+  month: "short",
+});
+        var clickTime = event.target.textContent;
+        document.querySelector("#sectionDate").innerHTML= `<span>| ${formattedDate}</span><span><small id ='edit' class='edit'>&nbsp;(Edit)<small></span>`;
+        $("#edit").click(function(){
+            // action goes here!!
+            $("#dateTime").removeClass("d-none")
+            document.querySelector("#sectionDate").innerHTML="";
+            $("#seat").addClass("d-none");
+            $("#displayTime").css("display","none");
+            $(".date").removeClass("date-selected");
+        });
          //get showTimeId from div to fetch ShowSeat based on ShowTimeID
         const showtimeId = event.target.dataset.showIds;
         //set value to vm
@@ -336,6 +365,7 @@ for(var i = 0; i<countTime; i++){
             var row = data.data[0].seat.audi.row;
             console.log(column);
             console.log(row);
+            let itemCount = -1;
              let placeholder = $("showSeat");
             let display = "";
             display=display+"<div class='platinum'><small><span class='d-block text-center'>PLATINUM NRP 300.00</span></small>";
@@ -358,7 +388,8 @@ for(var i = 0; i<countTime; i++){
                                     display+=`<tr class='mx-auto'><td><div><span style='margin:auto;display:block;' class='p-1 m-1 text-center'>${x}</span></div></td>`;
                                         for (var j = 1; j <= row; j++)
                                         {
-                                            display+=`<td id='${x}${j}' class="mx-3 ">
+                                            itemCount++;
+                                            display+=`<td id='${x}${j}' class="mx-3 " data-seat-id='${data.data[itemCount].seat.id}'>
                                                 <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
                                                 <span class="d-block text-center"></span>
                                             </td>`;
@@ -372,14 +403,61 @@ for(var i = 0; i<countTime; i++){
 
                 document.querySelectorAll('#myTable td')
         .forEach(e => e.addEventListener("click", function () {
-            alert("clicked")
             e.classList.toggle("selected");
+            var totalSelected = 0;
+            document.querySelector("#section-2").innerHTML=`
+                <span>
+                    | <img class="d-inline" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
+                </span>`;
         if (e.lastElementChild.innerHTML === this.id) {
                 e.lastElementChild.innerHTML = "";
             } else {
                 e.lastElementChild.innerHTML = this.id;
             }
         }));
+
+        const seatIds = [];
+document.querySelector("#buy-now").addEventListener("click",e=>{
+    const selected = document.querySelectorAll("td.selected");
+    for(var seat of selected){
+        seatIds.push(
+            seat.dataset.seatId
+        );
+    }
+    console.log(seatIds);
+    const postData = {
+        SeatId: seatIds,
+        ShowTimeID : data.data[0].showTimeID,
+        ShowID : checkShowId
+    };
+   
+    fetch("/Public/CheckOut/Post",{
+        method: 'POST',
+        body: JSON.stringify(postData),
+        headers:{
+            'Content-Type':'application/json'
+        }
+    })
+    .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then(x => {
+                console.log('Server Response:', x);
+                if (x.success) {
+                    alert("selected seat send to POST request");
+                    window.location.reload();
+                } else {
+                    alert("Error POST request");
+                }
+            })
+
+    });
+
+
+@* }); *@
         }).catch((error)=>{
             console.log(error)
         });
@@ -393,10 +471,6 @@ for(var i = 0; i<countTime; i++){
 
         const timelist = document.getElementsByClassName("timeSpan");
 });
-
-
-
-
 
 
 

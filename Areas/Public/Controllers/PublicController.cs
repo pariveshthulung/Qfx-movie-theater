@@ -91,7 +91,7 @@ public class PublicController : Controller
                    .FirstOrDefaultAsync();
         return View(vm);
     }
-
+    [HttpGet]
     public async Task<IActionResult> BuyTicketAsync(long ShowID, long MovieID)
     {
         var vm = new BuyTicketVm();
@@ -103,8 +103,8 @@ public class PublicController : Controller
                             .ThenInclude(z => z.Genre).Include(x => x.Movie).ThenInclude(y => y.Language)
                     .Include(x => x.Audi)
                         .ThenInclude(y => y.Location).FirstOrDefaultAsync();
-        var movieID = _context.Shows.Where(x=>x.ID==ShowID).Select(x=>x.MovieID).FirstOrDefault();
-        var showIDs = _context.Shows.Include(x=>x.Audi).Where(x=>x.MovieID==movieID && x.Audi.LocationID==currentLocationId).Select(x=>x.ID).ToList();
+        var movieID = _context.Shows.Where(x => x.ID == ShowID).Select(x => x.MovieID).FirstOrDefault();
+        var showIDs = _context.Shows.Include(x => x.Audi).Where(x => x.MovieID == movieID && x.Audi.LocationID == currentLocationId).Select(x => x.ID).ToList();
         // vm.Shows = await _context.Shows.Where(x => audiID.Contains(x.AudiID)).Where(x=>x.MovieID==MovieID).Include(x => x.Movie)
         //                 .ThenInclude(y => y.MovieGenres)
         //                     .ThenInclude(z => z.Genre).Include(x => x.Movie).ThenInclude(y => y.Language)
@@ -145,7 +145,7 @@ public class PublicController : Controller
     {
         var currentUserID = _currentUser.GetCurrentUserId();
         var vm = new TicketIndexVm();
-        
+
         vm.Reservations = await _context.Reservations.Where(x => x.UserID == currentUserID).ToListAsync();
 
         return View(vm);
@@ -163,7 +163,7 @@ public class PublicController : Controller
         var dates = _context.ShowDates.ToList();
         var locationID = _currentLocation.GetCurrentLocationIDAsync();
         // var showDatesList = _context.ShowDates.Include(x=>x.Show).Where(x=>x.Date==dateTime && audiID.Contains(x.Show.AudiID)).ToList();
-        var showDateIDs = _context.ShowDates.Include(x => x.Show).ThenInclude(y=>y.Audi).Where(x => x.Date == dateTime && (x.Show.MovieID == movieID) && (x.Show.Audi.LocationID==locationID)).Select(x => x.ID).ToList();
+        var showDateIDs = _context.ShowDates.Include(x => x.Show).ThenInclude(y => y.Audi).Where(x => x.Date == dateTime && (x.Show.MovieID == movieID) && (x.Show.Audi.LocationID == locationID)).Select(x => x.ID).ToList();
         var showTime = await _context.ShowTimes.Where(x => showDateIDs.Contains(x.ShowDateID)).ToListAsync();
         return Json(new { data = showTime });
     }
