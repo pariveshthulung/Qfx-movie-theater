@@ -5,8 +5,10 @@ using QFX;
 using QFX.data;
 using QFX.Manager;
 using QFX.Manager.Interface;
+using QFX.Models;
 using QFX.Provider;
 using QFX.Provider.Interface;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(x=>{x.LoginPath = "/Admin/Auth/Login"; });
+builder.Services.Configure<StripeSetting>(builder.Configuration.GetSection("Stripe"));
 
 builder.Services.AddNotyf(config=>
     { config.DurationInSeconds = 10;config.IsDismissable = true;config.Position = NotyfPosition.BottomRight; });
@@ -50,6 +53,8 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
 

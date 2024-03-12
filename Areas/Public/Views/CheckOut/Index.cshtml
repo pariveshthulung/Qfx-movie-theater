@@ -1,0 +1,156 @@
+@{
+	Layout = "_publicLayout";
+}
+@model QFX.ViewModels.CheckOutVm.IndexVm
+<form method="post">
+	<br />
+	<div class="container">
+		<div class="card shadow border-0">
+			<div class="card-body">
+				<div class="container rounded p-2">
+					<div class="row">
+							<h2 class="h3 mb-3 text-black">Billing Details</h2>
+						
+						<div class="col-md-6">
+
+							<div class="row mb-5">
+								<div class="col-md-12">
+									@* <h2 class="h3 mb-3 text-black">Your Order</h2> *@
+									<div class="p-3 p-lg-5 border bg-white">
+										<table class="table site-block-order-table mb-5">
+											<thead>
+												<th>Seat Type</th>
+												<th>No. of Seat</th>
+												<th>Price</th>
+											</thead>
+											<tbody>
+												@{
+                                                        var Premium = 0;
+                                                        var Platinum = 0;
+                                                
+													@foreach (var seat in Model.ShowSeats)
+													{
+                                                        if(@seat.Seat.SeatType=="Premium")
+                                                        {
+                                                            Premium++;
+                                                        }
+                                                        else if(@seat.Seat.SeatType=="Platinum"){
+                                                            Platinum++;
+                                                        }
+                                                    }
+                                                    var Total = (Premium*400) + (Platinum*200);
+                                                    var PlatinumTotal = (Platinum*200);
+                                                    var PremiumTotal = (Premium*400);
+                                                if(Premium>0){
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Premium</strong>
+                                                        </td>
+                                                        <td>
+                                                            @Premium x 400
+                                                        </td>
+                                                        <td>
+                                                            @PremiumTotal
+                                                        </td>
+                                                    </tr>
+                                                } 
+                                                if(Platinum > 0){
+                                                    <tr>
+                                                        <td>
+                                                            <strong>Platium</strong>
+                                                        </td>
+                                                        <td>
+                                                            @Platinum x 200
+                                                        </td>
+                                                        <td>
+                                                            @PlatinumTotal
+                                                        </td>
+                                                    </tr>
+                                                } 
+                                            
+                                                											
+												<tr>
+                                                    <hr>
+													<td class="text-black font-weight-bold"><strong>Total</strong></td>
+                                                    <td></td>
+													<td class="text-black">@Total</td>
+												</tr>
+                                                }
+											</tbody>
+										</table>
+
+										@* <div class="border p-3 mb-3">
+											<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse"
+													href="#collapsebank" role="button" aria-expanded="false"
+													aria-controls="collapsebank">Direct Bank Transfer</a></h3>
+
+											<div class="collapse" id="collapsebank">
+												<div class="py-2">
+													<p class="mb-0">Make your payment directly into our bank account.
+														Please use your Order ID as the payment reference. Your order
+														won’t be shipped until the funds have cleared in our account.
+													</p>
+												</div>
+											</div>
+										</div> *@
+
+										@* <div class="border p-3 mb-3">
+											<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse"
+													href="#collapsecheque" role="button" aria-expanded="false"
+													aria-controls="collapsecheque">Cheque Payment</a></h3>
+
+											<div class="collapse" id="collapsecheque">
+												<div class="py-2">
+													<p class="mb-0">Make your payment directly into our bank account.
+														Please use your Order ID as the payment reference. Your order
+														won’t be shipped until the funds have cleared in our account.
+													</p>
+												</div>
+											</div>
+										</div> *@
+
+										@* <div class="border p-3 mb-5">
+											<h3 class="h6 mb-0"><a class="d-block" data-bs-toggle="collapse"
+													href="#collapsepaypal" role="button" aria-expanded="false"
+													aria-controls="collapsepaypal">Paypal</a></h3>
+
+											<div class="collapse" id="collapsepaypal">
+												<div class="py-2">
+													<p class="mb-0">Make your payment directly into our bank account.
+														Please use your Order ID as the payment reference. Your order
+														won’t be shipped until the funds have cleared in our account.
+													</p>
+												</div>
+											</div>
+										</div> *@
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="row">
+					@* <div class="col-12 col-md-7 pt-2">
+						<p style="color:maroon; font-size:14px;">Estimate Arrival Date:
+							@DateTime.Now.AddDays(2).ToShortDateString()-@DateTime.Now.AddDays(5).ToShortDateString()
+
+						</p>
+					</div> *@
+					<div class="col-12 col-md-2">
+						<button type="submit" asp-action="BuyTicket" asp-controller="Public"
+							class="btn btn-primary form-control">Back
+						</button>
+
+					</div>
+					<div class="col-12 col-md-3">
+						<button type="submit" value="Place Order" class="btn btn-primary form-control">Place
+							Order</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

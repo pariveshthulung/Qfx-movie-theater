@@ -2,7 +2,7 @@
     Layout = "_PublicLayout";
 }
 @model QFX.ViewModels.PublicVm.DetailVm
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+@* <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"> *@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.min.css" rel="stylesheet">
 <style>
     table {
@@ -138,7 +138,7 @@
                     <td class="text-dark">
                         @foreach (var genre in Model.Movies.MovieGenres)
                         {
-                            @Html.Raw(@genre.Genre.Name + ",")
+                            @Html.Raw(@genre.Genre.Name+",")
                         }
                     </td>
                 </tr>
