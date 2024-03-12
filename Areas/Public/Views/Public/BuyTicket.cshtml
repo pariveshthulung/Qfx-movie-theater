@@ -250,8 +250,8 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                             <div class="row d-flex justify-content-center mt-5">
                                 <div class="col-2">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                         Launch demo modal
+                                    <button id="buy-now" type="button" class="btn btn-secondary p-2 border rounded-3 "  style="margin-left:30px" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                         Buy Now
                                     </button>
                                 </div>
                             </div>
@@ -268,15 +268,32 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Specify Seat Type</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        <table class="w-100">
+            <thead>
+                <tr>
+                    <th>Seat Type</th>
+                    <th>No. of Seats</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="premium"></tr>
+                <tr id="platinum"></tr>
+                <tr>
+                    <td>Total:</td>
+                    <td></td>
+                    <td id="total"></td>
+                </tr>
+            </tbody>
+        </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button id="confirm" type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancle</button>
+        <button id="confirm" type="button" class="btn btn-secondary">Confirm</button>
       </div>
     </div>
   </div>
@@ -407,7 +424,7 @@ for(var i = 0; i<countTime; i++){
                                         for (var j = 1; j <= row; j++)
                                         {
                                             itemCount++;
-                                            display+=`<td id='${x}${j}' class="mx-3 " data-seat-id='${data.data[itemCount].seat.id}'>
+                                            display+=`<td id='${x}${j}' class="mx-3 " data-seat-id='${data.data[itemCount].seat.id}' data-seat-type='${data.data[itemCount].seat.seatType}' data-seat-name='${data.data[itemCount].seat.seatName}'>
                                                 <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
                                                 <span class="d-block text-center"></span>
                                             </td>`;
@@ -434,9 +451,50 @@ for(var i = 0; i<countTime; i++){
             }
         }));
 
+        document.querySelector("#buy-now").addEventListener("click",e=>{
+            var noOfPremiumSeat=0;
+            var nameOfPremiumSeat = [];
+            var noOfPlatinumSeat =0;
+            var nameOfPlatinumSeat =[];
+            const selected = document.querySelectorAll("td.selected");
+            for(var seat of selected){
+                if(seat.dataset.seatType=="Premium")
+                {
+                    noOfPremiumSeat++;
+                    nameOfPremiumSeat.push(
+                        seat.dataset.seatName
+                    );
+                }
+                else if(seat.dataset.seatType=="Platinum")
+                {
+                    noOfPlatinumSeat++;
+                    nameOfPlatinumSeat.push(
+                        seat.dataset.seatName
+                    );
+                }
+            }
+            if(noOfPremiumSeat>0){
+                document.querySelector("#premium").innerHTML=`
+                    <td>Premium<br>NPR 480.00 <br>${nameOfPremiumSeat.join(",")}<br></td>
+                    <td>${noOfPremiumSeat}</td>
+                    <td>${noOfPremiumSeat*480}</td>
+                `;
+            }
+            if(noOfPlatinumSeat>0){
+                document.querySelector("#platinum").innerHTML=`
+                    <td>Premium<br>NPR 360.00 <br>${nameOfPlatinumSeat.join(",")}<br></td>
+                    <td>${noOfPlatinumSeat}</td>
+                    <td>${noOfPlatinumSeat*360}</td>
+                `;
+            }
+            document.querySelector("#total").innerHTML= noOfPlatinumSeat*360 + noOfPremiumSeat*480;
+            
+        });
+
         const seatIds = [];
 document.querySelector("#confirm").addEventListener("click",e=>{
     const selected = document.querySelectorAll("td.selected");
+    
     for(var seat of selected){
         seatIds.push(
             seat.dataset.seatId
