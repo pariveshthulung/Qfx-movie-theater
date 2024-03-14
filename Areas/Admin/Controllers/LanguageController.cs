@@ -53,7 +53,7 @@ public class LanguageController : Controller
             }
             _notifyService.Success("Done successfully!!");
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
@@ -68,12 +68,12 @@ public class LanguageController : Controller
             _context.Languages.Remove(_context.Languages.FirstOrDefault(x => x.ID == ID));
             await _context.SaveChangesAsync();
             _notifyService.Success("Language Deleted!!!");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Operation fails" + e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

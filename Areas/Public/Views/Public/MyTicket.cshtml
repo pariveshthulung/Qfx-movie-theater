@@ -1,0 +1,54 @@
+@{
+    Layout = "_PublicLayout";
+}
+@model QFX.ViewModels.TicketVm.TicketIndexVm
+<link href="https://cdn/Public/js.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<div class="container mb-5">
+    @* <div class="card"> *@
+    @* <div class="card-body"> *@
+    <h1 class="text-center mt-5">Ticket</h1>
+    @{
+        if (Model.Reservations != null)
+        {
+            foreach (var ticket in Model.Reservations)
+            {
+                <div class="row my-2">
+                    <div class="col my-auto">
+                        @* <strong>Download</strong> *@
+                    </div>
+                    <div class="col mx-auto">
+                        <div class="avatar avatar-md border-0">
+                            <img class="" src="/Public/images/movie/@ticket.Show.Movie.ImageUrl" alt="image"
+                                class="avatar-img rounded " style="width:50px; height:100px; object-fit:contain; margin-left:100px">
+                        </div>
+                    </div>
+                    <div class="col my-auto">
+                        <strong>@ticket.Show.Movie.Title</strong>
+                    </div>
+                    <div class="col my-auto">
+                        <strong>@ticket.ShowTime.ShowDate.Date.ToString("ddd dd MMM")</strong>
+                    </div>
+                    <div class="col my-auto">
+                        <strong>@ticket.ShowTime.Time.ToString("hh : mm tt")</strong>
+                    </div>
+                    <div class="col my-auto">
+                        <a href="/QFX/3.pdf">View</a>
+                    </div>
+                    <div class="col my-auto">
+                        <strong>Download</strong>
+                    </div>
+                    <div class="col my-auto">
+                        @* <strong>Download</strong> *@
+                    </div>
+
+                </div>
+            }
+        }
+        else{
+            <h4 class="text-center mt-3 text-danger">No Ticket!!!</h4>
+        }
+    }
+
+    @* </div> *@
+    @* </div> *@
+</div>

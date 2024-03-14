@@ -8,6 +8,7 @@ using QFX.Manager.Interface;
 using QFX.Models;
 using QFX.Provider;
 using QFX.Provider.Interface;
+using QuestPDF.Infrastructure;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,7 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+QuestPDF.Settings.License = LicenseType.Community;
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 

@@ -10,6 +10,8 @@ public class Reservation
     public string? PaymentIntendID { get; set; }
     public string? SessionID { get; set; }
     public long ShowTimeID { get; set; }
+    [ForeignKey("ShowTimeID")]
+    public virtual ShowTime? ShowTime { get; set; }
     public DateTime ReservationDate { get; set; } = DateTime.Now;
     public long ShowID { get; set; }
     [ForeignKey("ShowID")]

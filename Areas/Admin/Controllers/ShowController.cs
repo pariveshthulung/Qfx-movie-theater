@@ -87,7 +87,7 @@ public class ShowController : Controller
             // }
             await _context.SaveChangesAsync();
             _notifyService.Success("Show updated");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         else
         {
@@ -102,13 +102,13 @@ public class ShowController : Controller
                 _context.Shows.Add(show);
                 await _context.SaveChangesAsync();
                 _notifyService.Success("Show Added!!");
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 _notifyService.Error("Show exist with same audi and movie!!");
                 
-                return RedirectToAction("Upsert");
+                return RedirectToAction(nameof(Upsert));
             }
         }
     }
@@ -123,7 +123,7 @@ public class ShowController : Controller
             await _context.SaveChangesAsync();
             _notifyService.Success("Show deleted!!");
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {

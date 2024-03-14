@@ -140,15 +140,24 @@ public class PublicController : Controller
 
         return View(vm);
     }
-
+    [Authorize]
     public async Task<IActionResult> MyTicket()
     {
         var currentUserID = _currentUser.GetCurrentUserId();
         var vm = new TicketIndexVm();
 
-        vm.Reservations = await _context.Reservations.Where(x => x.UserID == currentUserID).ToListAsync();
+        vm.Reservations = await _context.Reservations
+                            .Include(x => x.Show).ThenInclude(y => y.Movie)
+                            .Include(x => x.ShowTime).ThenInclude(y => y.ShowDate)
+                            .Where(x => x.UserID == currentUserID)
+                            .ToListAsync();
 
         return View(vm);
+    }
+    [Authorize]
+    public IActionResult UserProfile()
+    {
+        return View();
     }
 
 

@@ -40,12 +40,12 @@ public class GenreController : Controller
             _context.Add(genre);
             await _context.SaveChangesAsync();
             _notifyService.Success("Genre added successfully");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error(e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 
@@ -66,12 +66,12 @@ public class GenreController : Controller
             genre.Name = vm.Name;
             await _context.SaveChangesAsync();
             _notifyService.Success("Genre updated");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Fail to update genre");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
     public async Task<IActionResult> Delete(long ID)
@@ -82,12 +82,12 @@ public class GenreController : Controller
             _context.Genres.Remove(_context.Genres.FirstOrDefault(x => x.ID == ID));
             await _context.SaveChangesAsync();
             _notifyService.Success("Genre deleted");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Fail to delete genre");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 

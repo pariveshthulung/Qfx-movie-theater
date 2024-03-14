@@ -74,13 +74,17 @@ public class MovieController : Controller
     {
         try
         {
-            var movie = new Movie();
-            movie.Title = vm.MovieTitle;
-            movie.TrailerUrl = vm.TrailerUrl;
-            movie.Description = vm.Description;
-            movie.ReleaseDate = vm.ReleaseDate;
-            movie.Runtime = TimeSpan.Parse(vm.Runtime);
-            movie.LanguageID = vm.LanguageID;
+            var movie = new Movie
+            {
+                Title = vm.MovieTitle,
+                TrailerUrl = vm.TrailerUrl,
+                Description = vm.Description,
+                ReleaseDate = vm.ReleaseDate,
+                Runtime = TimeSpan.Parse(vm.Runtime),
+                LanguageID = vm.LanguageID,
+                Cast = vm.Cast,
+                Director = vm.Director
+            };
             var imageName = ConfirmImage(vm.PosterImage, movie.ImageUrl);
             var coverName = ConfirmImage(vm.CoverImage,movie.CoverUrl);
             movie.CoverUrl = coverName;
@@ -118,6 +122,8 @@ public class MovieController : Controller
         vm.Runtime = movie.Runtime.ToString();
         vm.Description = movie.Description;
         vm.LanguageID = movie.LanguageID;
+        vm.Cast = movie.Cast;
+        vm.Director = movie.Director;
         vm.GenreIDs = _context.MovieGenres.Where(x => x.MovieID == movie.ID).Select(x => x.GenreID).ToList();
         vm.Genres = _context.Genres.ToList();
         vm.Languages = _context.Languages.ToList();
@@ -142,6 +148,8 @@ public class MovieController : Controller
         movie.LanguageID = vm.LanguageID;
         movie.Runtime = TimeSpan.Parse(vm.Runtime);
         movie.TrailerUrl = vm.TrailerUrl;
+        movie.Cast = vm.Cast;
+        movie.Director = vm.Director;
 
         await _context.SaveChangesAsync();
 
@@ -157,7 +165,7 @@ public class MovieController : Controller
             await _context.SaveChangesAsync();
         }
         _notifyService.Success("Product added successfully.");
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> Delete(long ID)
@@ -170,7 +178,7 @@ public class MovieController : Controller
             _context.MovieGenres.RemoveRange(movieGenres);
             await _context.SaveChangesAsync();
             _notifyService.Success("Deleted sucessfully");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {

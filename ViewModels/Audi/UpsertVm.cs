@@ -8,6 +8,7 @@ public class UpsertVm
     public string? Name { get; set; }
     public int Row { get; set; }
     public int Column { get; set; }
+    public int PremiumRow { get; set; }
     public  List<Models.Location>? Locations { get; set; }
     public long LocationID { get; set; }
     public SelectList LocationList(){

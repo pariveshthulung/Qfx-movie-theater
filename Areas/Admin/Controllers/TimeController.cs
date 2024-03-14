@@ -88,12 +88,12 @@ public class TimeController : Controller
             else
             {
                 _notifyService.Error("Time already exist!!!");
-                return RedirectToAction("Index", new { ShowDateID = Id });
+                return RedirectToAction(nameof(Index), new { ShowDateID = Id });
 
             }
 
         }
-        return RedirectToAction("Index", new { ShowDateID = Id });
+        return RedirectToAction(nameof(Index), new { ShowDateID = Id });
     }
     [HttpPost]
     public async Task<IActionResult> Delete(long ShowTimeID)
@@ -103,7 +103,7 @@ public class TimeController : Controller
         _context.ShowSeats.RemoveRange(_context.ShowSeats.Where(x=>x.ShowTimeID==showTime.ID).ToList());
         await _context.SaveChangesAsync();
         _notifyService.Success("Time deleted!!!");
-        return RedirectToAction("Index", new { ShowDateID = showTime.ShowDateID });
+        return RedirectToAction(nameof(Index), new { ShowDateID = showTime.ShowDateID });
     }
 
 }
