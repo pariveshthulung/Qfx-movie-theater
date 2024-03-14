@@ -422,7 +422,7 @@ for(var i = 0; i<countTime; i++){
                                         for (var j = 1; j <= row; j++)
                                         {
                                             itemCount++;
-                                            display+=`<td id='${x}${j}' class="mx-3 " data-seat-id='${data.data[itemCount].id}' data-seat-type='${data.data[itemCount].seat.seatType}' data-seat-name='${data.data[itemCount].seat.seatName}'>
+                                            display+=`<td id='${x}${j}' class="mx-3 available" data-seat-id='${data.data[itemCount].id}' data-seat-type='${data.data[itemCount].seat.seatType}' data-seat-name='${data.data[itemCount].seat.seatName}' data-seat-status='${data.data[itemCount].showSeatStatus}'>
                                                 <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
                                                 <span class="d-block text-center"></span>
                                             </td>`;
@@ -433,8 +433,17 @@ for(var i = 0; i<countTime; i++){
                         }
                 display+="</div>";
                 document.getElementById("showSeat").innerHTML = display;
+                const allSeat =document.querySelectorAll('#myTable td');
+                for(var seat of allSeat)
+                {
+                    if(seat.dataset.seatStatus == "SoldOut")
+                    {
+                        seat.classList.remove("available");
+                        seat.classList.add("sold-out");
+                    }
+                }
 
-                document.querySelectorAll('#myTable td')
+                document.querySelectorAll('#myTable td.available')
         .forEach(e => e.addEventListener("click", function () {
             e.classList.toggle("selected");
             var totalSelected = 0;
@@ -488,6 +497,7 @@ for(var i = 0; i<countTime; i++){
             document.querySelector("#total").innerHTML= noOfPlatinumSeat*360 + noOfPremiumSeat*480;
             
         });
+        
 
         const seatIds = [];
 document.querySelector("#confirm").addEventListener("click",e=>{

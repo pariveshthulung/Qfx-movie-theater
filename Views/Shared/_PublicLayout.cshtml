@@ -28,6 +28,35 @@
     <link href="/Public/css/tiny-slider.css" rel="stylesheet">
     <link href="/Public/css/style.css" rel="stylesheet">
     <title>QFX Cinema </title>
+    <style>
+        #movieDropdown {
+            display: none;
+            position: absolute;
+            background-color: #3b5d50;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        #movieDropdown a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        #movieDropdown a:hover {
+            background-color: #3b6a58;
+        }
+
+        #dropdown:hover #movieDropdown {
+            display: block;
+        }
+
+        #dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+    </style>
 </head>
 
 <body>
@@ -60,8 +89,22 @@
 
 
                     </li>
-                    <li><a class="nav-link" href="shop.html">Movie</a></li>
-                    <li><a class="nav-link" href="about.html">Customer Service</a></li>
+                    <li style="margin-top:10px; margin-bottom:12px;">
+                        @* <a class="nav-link" href="shop.html">Movie</a> *@
+                        <div id="dropdown" class="nav-item dropdown">
+                            <a style="text-decoration: none;" class="dropdown-toggle my-auto" href="#" role="button" id="dropdownMenuLink"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Movie
+                            </a>
+
+                            <div id="movieDropdown" class="dropdown-menu  dropdown-menu-end dropdown-menu-arrow">
+                                <a class="dropdown-item text-dark" asp-action="NowShowing">Now Showing</a>
+                                <a class="dropdown-item text-dark" asp-action="ComingSoon">Coming Soon</a>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li><a class="nav-link" href="https://forms.gle/YNRajzhxdxaj5reKA">Customer Service</a></li>
                     <li><a class="nav-link" href="services.html">Club QFX</a></li>
                     <li><a class="nav-link" href="blog.html">More</a></li>
                     @* <li><a class="nav-link" href="contact.html">Contact us</a></li> *@
@@ -125,7 +168,7 @@
                                                     d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
                                                 <path fill-rule="evenodd"
                                                     d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
-                                            </svg>&nbsp; &nbsp;  Log-in
+                                            </svg>&nbsp; &nbsp; Log-in
                                         </a>
 
                                     }
@@ -163,14 +206,15 @@
             <img src="/Public/images/sofa.png" alt="Image" class="img-fluid">
             </div> *@
 
-           
+
 
             <div class="row g-5 mb-5">
                 <div class="col-lg-4">
-                    <div class="mb-4 footer-logo-wrap"><a asp-action="Index" asp-controller="Public" class="footer-logo"><span
-                    style="color: #D4D925;opacity:1.0">Q</span>FX<span>
-                    Cinemas</span></a></div>
-                    <p class="mb-4">QFX Cinemas are pioneers in introducing the latest visual technology, offering outstanding picture quality and first of its kind 4K projection in Nepal.</p>
+                    <div class="mb-4 footer-logo-wrap"><a asp-action="Index" asp-controller="Public"
+                            class="footer-logo"><span style="color: #D4D925;opacity:1.0">Q</span>FX<span>
+                                Cinemas</span></a></div>
+                    <p class="mb-4">QFX Cinemas are pioneers in introducing the latest visual technology, offering
+                        outstanding picture quality and first of its kind 4K projection in Nepal.</p>
 
                     <ul class="list-unstyled custom-social">
                         <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
@@ -218,30 +262,30 @@
                     </div>
                 </div>
 
-             <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                    <div class="subscription-form mb-2" style="margin-left: 200px;">
-                        <h3 class="d-flex align-items-center"><span class="me-1"><img
-                                    src="/Public/images/envelope-outline.svg" alt="Image"
-                                    class="img-fluid"></span><span>Subscribe to Newsletter</span></h3>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="subscription-form mb-2" style="margin-left: 200px;">
+                            <h3 class="d-flex align-items-center"><span class="me-1"><img
+                                        src="/Public/images/envelope-outline.svg" alt="Image"
+                                        class="img-fluid"></span><span>Subscribe to Newsletter</span></h3>
 
-                        <form action="#" class="row g-3">
-                            <div class="col-auto">
-                                <input type="text" class="form-control" placeholder="Enter your name">
-                            </div>
-                            <div class="col-auto">
-                                <input type="email" class="form-control" placeholder="Enter your email">
-                            </div>
-                            <div class="col-auto">
-                                <button class="btn btn-primary">
-                                    <span class="fa fa-paper-plane"></span>
-                                </button>
-                            </div>
-                        </form>
+                            <form action="#" class="row g-3">
+                                <div class="col-auto">
+                                    <input type="text" class="form-control" placeholder="Enter your name">
+                                </div>
+                                <div class="col-auto">
+                                    <input type="email" class="form-control" placeholder="Enter your email">
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-primary">
+                                        <span class="fa fa-paper-plane"></span>
+                                    </button>
+                                </div>
+                            </form>
 
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
 
 
@@ -249,9 +293,10 @@
                 <div class="row pt-4">
                     <div class="col-lg-6">
                         <p class="mb-2 text-center text-lg-start">Copyright &copy;
-                            @* <script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; *@
-                            Designed with love by <a href="https://github.com/pariveshthulung">Parivesh.Thulung</a> Distributed By <a
-                                hreff="https://themewagon.com">ThemeWagon</a>
+                            @* <script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash;
+                            *@
+                            Designed with love by <a href="https://github.com/pariveshthulung">Parivesh.Thulung</a>
+                            Distributed By <a hreff="https://themewagon.com">ThemeWagon</a>
                             <!-- License information: https://untree.co/license/ -->
                         </p>
                     </div>
