@@ -50,12 +50,12 @@ public class UserController : Controller
             await _context.SaveChangesAsync();
             tx.Complete();
             _notifyService.Success("user added.!!!");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("error operation" + e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         
     }
@@ -90,12 +90,12 @@ public class UserController : Controller
             await _context.SaveChangesAsync();
             tx.Complete();
             _notifyService.Success("User updated!!!");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Operation fail" + e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
     [HttpPost]
@@ -103,6 +103,6 @@ public class UserController : Controller
     {
         _context.Users.Remove(_context.Users.FirstOrDefault(x=>x.ID==ID));
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 }

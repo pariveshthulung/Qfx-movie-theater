@@ -71,11 +71,11 @@ public class DateController : Controller
             }
             else
             {
-                return RedirectToAction("Index", new { ShowID = Id });
+                return RedirectToAction(nameof(Index), new { ShowID = Id });
             }
 
         }
-        return RedirectToAction("Index", new { ShowID = Id });
+        return RedirectToAction(nameof(Index), new { ShowID = Id });
     }
 
     [HttpPost]
@@ -88,6 +88,6 @@ public class DateController : Controller
         _context.ShowSeats.RemoveRange(_context.ShowSeats.Where(x => showTimeIdS.Contains(x.ID)).ToList());
         await _context.SaveChangesAsync();
         _notifyService.Success("date deleted!!!");
-        return RedirectToAction("Index", new { ShowID = showDate.ShowID });
+        return RedirectToAction(nameof(Index), new { ShowID = showDate.ShowID });
     }
 }

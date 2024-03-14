@@ -4,5 +4,5 @@ namespace QFX.ViewModels.TicketVm;
 
 public class TicketIndexVm
 {
-    public List<Reservation>? Reservations { get; set; }
+    public List<Models.Reservation>? Reservations { get; set; }
 }

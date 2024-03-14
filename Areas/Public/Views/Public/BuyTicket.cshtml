@@ -33,11 +33,9 @@
 filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104%) contrast(112%);
     }
     .sold-out{
-filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104%) contrast(112%);
-}
-    .unavailable{
-        filter: opacity(50%);
-    }
+filter: invert(11%) sepia(84%) saturate(4523%) hue-rotate(303deg) brightness(97%) contrast(98%);}
+    @* .sold-out{
+filter: invert(9%) sepia(25%) saturate(1885%) hue-rotate(191deg) brightness(88%) contrast(106%);    } *@
 </style>
 <div class=" my-3">
     <div class="row" style="margin-left:15px">
@@ -235,7 +233,7 @@ filter: invert(13%) sepia(27%) saturate(6427%) hue-rotate(345deg) brightness(104
                                         </span>
                                     </div>
                                     <div class="col-2 text-center ">
-                                        <img class="unavailable" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer;">
+                                        <img class="unavailable" src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; opacity: 0.5;">
                                         <br>
                                         <span>
                                             <small>
@@ -424,7 +422,7 @@ for(var i = 0; i<countTime; i++){
                                         for (var j = 1; j <= row; j++)
                                         {
                                             itemCount++;
-                                            display+=`<td id='${x}${j}' class="mx-3 " data-seat-id='${data.data[itemCount].seat.id}' data-seat-type='${data.data[itemCount].seat.seatType}' data-seat-name='${data.data[itemCount].seat.seatName}'>
+                                            display+=`<td id='${x}${j}' class="mx-3 available" data-seat-id='${data.data[itemCount].id}' data-seat-type='${data.data[itemCount].seat.seatType}' data-seat-name='${data.data[itemCount].seat.seatName}' data-seat-status='${data.data[itemCount].showSeatStatus}'>
                                                 <img src="https://d346azgjfhsciq.cloudfront.net/S3/uploads/seatIcons/1684133570541-microsoftteamsimage_6.png" width="24px" height="24px" style="cursor: pointer; margin:auto; display:block;">
                                                 <span class="d-block text-center"></span>
                                             </td>`;
@@ -435,8 +433,17 @@ for(var i = 0; i<countTime; i++){
                         }
                 display+="</div>";
                 document.getElementById("showSeat").innerHTML = display;
+                const allSeat =document.querySelectorAll('#myTable td');
+                for(var seat of allSeat)
+                {
+                    if(seat.dataset.seatStatus == "SoldOut")
+                    {
+                        seat.classList.remove("available");
+                        seat.classList.add("sold-out");
+                    }
+                }
 
-                document.querySelectorAll('#myTable td')
+                document.querySelectorAll('#myTable td.available')
         .forEach(e => e.addEventListener("click", function () {
             e.classList.toggle("selected");
             var totalSelected = 0;
@@ -451,13 +458,13 @@ for(var i = 0; i<countTime; i++){
             }
         }));
 
-        document.querySelector("#buy-now").addEventListener("click",e=>{
             var noOfPremiumSeat=0;
             var nameOfPremiumSeat = [];
             var noOfPlatinumSeat =0;
             var nameOfPlatinumSeat =[];
-            const selected = document.querySelectorAll("td.selected");
-            for(var seat of selected){
+        document.querySelector("#buy-now").addEventListener("click",e=>{
+            const selectedBuyNow = document.querySelectorAll("td.selected");
+            for(var seat of selectedBuyNow){
                 if(seat.dataset.seatType=="Premium")
                 {
                     noOfPremiumSeat++;
@@ -490,6 +497,7 @@ for(var i = 0; i<countTime; i++){
             document.querySelector("#total").innerHTML= noOfPlatinumSeat*360 + noOfPremiumSeat*480;
             
         });
+        
 
         const seatIds = [];
 document.querySelector("#confirm").addEventListener("click",e=>{
@@ -504,10 +512,15 @@ document.querySelector("#confirm").addEventListener("click",e=>{
     const postData = {
         SeatId: seatIds,
         ShowTimeID : data.data[0].showTimeID,
-        ShowID : checkShowId
+        ShowID : checkShowId,
+        PremiumQty: 5,
+        PlatinumQty:5
     };
-   
-    fetch("/Public/CheckOut/Post",{
+    @* alert(seatIds);
+    alert(data.data[0].showTimeID);
+    alert(checkShowId);
+    alert(noOfPlatinumSeat); *@
+    fetch("/Public/CheckOut/Index",{
         method: 'POST',
         body: JSON.stringify(postData),
         headers:{
@@ -523,8 +536,8 @@ document.querySelector("#confirm").addEventListener("click",e=>{
             .then(x => {
                 console.log('Server Response:', x);
                 if (x.success) {
-                    alert("selected seat send to POST request");
-                    window.location.reload();
+                    @* alert("selected seat send to POST request"); *@
+                    window.location.href = x.redirect;
                 } else {
                     alert("Error POST request");
                 }

@@ -10,6 +10,8 @@ public class MovieAddVm
     public string? Description { get; set; }
     public DateTime ReleaseDate { get; set; }
     public string? Runtime { get; set; }
+    public string? Cast { get; set; }
+    public string? Director { get; set; }
     public IFormFile? PosterImage { get; set; }
     public IFormFile? CoverImage { get; set; }
     public string? ImageUrl { get; set; }

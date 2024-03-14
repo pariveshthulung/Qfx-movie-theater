@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QFX.Constants;
 using QFX.data;
 using QFX.Models;
 using QFX.ViewModels.AudiVm;
@@ -59,12 +60,13 @@ public class AudiController : Controller
                 {
                     for (var j = 1; j <= vm.Row; j++)
                     {
-                        if(j==vm.Row-3){
                         
-                        }
                         var seat = new Seat();
                         seat.SeatName = x.ToString() + j;
                         seat.AudiID = audi.ID;
+                        if(j==vm.PremiumRow){
+                            seat.SeatType = SeatTypeConstants.Premium;
+                        }
                         _context.Seats.Add(seat);
                         await _context.SaveChangesAsync();
                     }
@@ -81,6 +83,7 @@ public class AudiController : Controller
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
+            
                 _context.Audis.Add(audi);
                 await _context.SaveChangesAsync();
 
@@ -92,6 +95,9 @@ public class AudiController : Controller
                         var seat = new Seat();
                         seat.SeatName = x.ToString() + j;
                         seat.AudiID = audi.ID;
+                        if(j==vm.PremiumRow){
+                            seat.SeatType = SeatTypeConstants.Premium;
+                        }
                         _context.Seats.Add(seat);
                         await _context.SaveChangesAsync();
                     }
@@ -100,7 +106,7 @@ public class AudiController : Controller
             }
             _notifyService.Success("Done successfully!!");
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
@@ -116,12 +122,12 @@ public class AudiController : Controller
             _context.Seats.RemoveRange(_context.Seats.Where(x => x.AudiID == ID).ToList());
             await _context.SaveChangesAsync();
             _notifyService.Success("Language Deleted!!!");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Operation fails" + e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 

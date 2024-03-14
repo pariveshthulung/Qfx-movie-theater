@@ -10,7 +10,7 @@ using QFX.ViewModels.LocationVm;
 
 namespace QFX.Areas.Admin.Controllers;
 [Area("Admin")]
-[Authorize(Roles ="Admin,Employee")]
+[Authorize(Roles = "Admin,Employee")]
 public class LocationController : Controller
 {
     private readonly INotyfService _notifyService;
@@ -25,7 +25,7 @@ public class LocationController : Controller
         var vm = new IndexVm();
         vm.Locations = _context.Locations.ToList();
         return View(vm);
-    }  
+    }
     public async Task<IActionResult> Upsert(long? ID)
     {
         var vm = new UpsertVm();
@@ -33,12 +33,15 @@ public class LocationController : Controller
         {
             var location = await _context.Locations.FirstOrDefaultAsync(x => x.ID == ID);
             vm.CityName = location.CityName;
+            vm.PreminumPrice = location.PreminumPrice;
+            vm.PlatinumPrice = location.PlatinumPrice;
+
         }
         return View(vm);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Upsert(long? ID,UpsertVm vm)
+    public async Task<IActionResult> Upsert(long? ID, UpsertVm vm)
     {
         try
         {
@@ -46,16 +49,24 @@ public class LocationController : Controller
             {
                 var location = await _context.Locations.FirstOrDefaultAsync(x => x.ID == ID);
                 location.CityName = vm.CityName;
+                location.PreminumPrice = vm.PreminumPrice;
+                location.PlatinumPrice = vm.PlatinumPrice;
+                _notifyService.Success("Location updated successfully!!");
+
             }
             else
             {
-                var location = new Models.Location();
-                location.CityName = vm.CityName;
+                var location = new Models.Location
+                {
+                    CityName = vm.CityName,
+                    PlatinumPrice = vm.PlatinumPrice,
+                    PreminumPrice = vm.PreminumPrice
+                };
                 _context.Locations.Add(location);
+                _notifyService.Success("Location added successfully!!");
             }
-            _notifyService.Success("Done successfully!!");
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
@@ -70,12 +81,12 @@ public class LocationController : Controller
             _context.Locations.Remove(_context.Locations.FirstOrDefault(x => x.ID == ID));
             await _context.SaveChangesAsync();
             _notifyService.Success("Location Deleted!!!");
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
         {
             _notifyService.Error("Operation fails" + e.Message);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 

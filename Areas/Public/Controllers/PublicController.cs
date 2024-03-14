@@ -140,15 +140,40 @@ public class PublicController : Controller
 
         return View(vm);
     }
-
+    [Authorize]
     public async Task<IActionResult> MyTicket()
     {
         var currentUserID = _currentUser.GetCurrentUserId();
         var vm = new TicketIndexVm();
 
-        vm.Reservations = await _context.Reservations.Where(x => x.UserID == currentUserID).ToListAsync();
+        vm.Reservations = await _context.Reservations
+                            .Include(x => x.Show).ThenInclude(y => y.Movie)
+                            .Include(x => x.ShowTime).ThenInclude(y => y.ShowDate)
+                            .Where(x => x.UserID == currentUserID)
+                            .ToListAsync();
 
         return View(vm);
+    }
+
+    public IActionResult NowShowing()
+    {
+        var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
+        var vm = new MovieVm();
+        vm.Shows = _context.Shows.Include(x=>x.Movie).Include(x=>x.Audi).Where(x=>x.Audi.LocationID==currentLocationId && x.ShowStatus == "Now Showing").ToList();
+        return View(vm);
+    }
+
+    public IActionResult ComingSoon()
+    {
+        var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
+        var vm = new MovieVm();
+        vm.Shows = _context.Shows.Include(x=>x.Movie).Include(x=>x.Audi).Where(x=>x.Audi.LocationID==currentLocationId && x.ShowStatus=="Coming soon").ToList();
+        return View(vm);
+    }
+    [Authorize]
+    public IActionResult UserProfile()
+    {
+        return View();
     }
 
 
