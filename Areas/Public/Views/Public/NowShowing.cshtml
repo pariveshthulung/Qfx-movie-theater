@@ -10,13 +10,10 @@
     @foreach (var show in Model.Shows)
     {
         <div class="col-1 mx-4">
-
             <a class="product-item" asp-action="BuyTicket" asp-route-ShowID="@show.ID" asp-route-MovieID="@show.MovieID">
-
                 <img src="/Public/images/movie/@show.Movie.ImageUrl" class="card-img-top rounded mx-auto d-block"
                     style="width:150px; height:250px; object-fit:contain;">
             </a>
-
         </div>
     }
 </div>

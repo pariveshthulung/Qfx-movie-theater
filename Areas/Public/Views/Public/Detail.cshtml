@@ -166,6 +166,15 @@
             </table>
         </div>
     </div>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <a style="background-color: #41C9E2;" class="btn border rounded-3 rounded-pill" asp-action="TicketNotify"> Inform when ticket is available</a>
+        </div>
+        <div class="col-8 my-auto">
+            <p class="my-auto">@Model.Movies.ReleaseDate.ToString("d MMM,yyyy")</p>
+        </div>
+    </div>
 </div>
 <script>
     function openPopup(videoId) {

@@ -37,6 +37,7 @@
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
+    
 
         #movieDropdown a {
             color: black;
@@ -46,6 +47,16 @@
         }
 
         #movieDropdown a:hover {
+            background-color: #3b6a58;
+        }
+        .dropdown-menu a{
+            color:#ffffff;
+             opacity:0.5;
+        }
+
+        .dropdown-menu a:hover {
+            color: #ffffff;
+            opacity: 1;
             background-color: #3b6a58;
         }
 
@@ -135,11 +146,9 @@
                                     </div>
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                <div class="mt-1 small text-muted">
-                                    <img src="/Public/images/user.svg">
-                                </div>
-                                <a asp-action="Index" asp-controller="Profile" asp-area="Public" class="dropdown-item">
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" style="background-color: #3b5d50;">
+            
+                                <a  asp-action="Index" asp-controller="Profile" asp-area="Public" class="dropdown-item">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                         class="bi bi-person" viewBox="0 0 16 16">
                                         <path

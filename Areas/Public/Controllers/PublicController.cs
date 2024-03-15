@@ -145,11 +145,12 @@ public class PublicController : Controller
     {
         var currentUserID = _currentUser.GetCurrentUserId();
         var vm = new TicketIndexVm();
-
+        var reservationIds = _context.ReservationSeats.Include(x=>x.Reservation).Where(x=>x.Reservation.UserID==currentUserID).Select(x=>x.ReservationID).ToList();
+        var distinctReservationId = reservationIds.Distinct().ToList();
         vm.Reservations = await _context.Reservations
                             .Include(x => x.Show).ThenInclude(y => y.Movie)
                             .Include(x => x.ShowTime).ThenInclude(y => y.ShowDate)
-                            .Where(x => x.UserID == currentUserID)
+                            .Where(x => distinctReservationId.Contains(x.ID))
                             .ToListAsync();
 
         return View(vm);
