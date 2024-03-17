@@ -1,4 +1,5 @@
 using System.Net.Http;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,26 +7,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QFX.data;
 using QFX.Migrations;
+using QFX.Models;
 using QFX.Provider.Interface;
 using QFX.ViewModels.PublicVm;
 using QFX.ViewModels.TicketVm;
 
 namespace QFX.Areas.Public.Controllers;
 [Area("Public")]
-[AllowAnonymous]
 public class PublicController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly ICurrentUserProvider _currentUser;
     private readonly ICurrentLocationProvider _currentLocation;
+    private readonly INotyfService _notifyService;
 
-    public PublicController(ApplicationDbContext context, ICurrentUserProvider currentUserProvider, ICurrentLocationProvider currentLocation)
+    public PublicController(ApplicationDbContext context, ICurrentUserProvider currentUserProvider, ICurrentLocationProvider currentLocation, INotyfService notyfService)
     {
         _context = context;
         _currentUser = currentUserProvider;
         _currentLocation = currentLocation;
+        _notifyService = notyfService;
+
     }
-    [HttpGet]
+    [HttpGet,AllowAnonymous]
     public async Task<IActionResult> IndexAsync(long? ID)
     {
         var vm = new IndexVm();
@@ -80,7 +84,7 @@ public class PublicController : Controller
 
         return View(vm);
     }
-
+    [AllowAnonymous]
     public async Task<IActionResult> DetailAsync(long ID)
     {
         var vm = new DetailVm();
@@ -91,7 +95,7 @@ public class PublicController : Controller
                    .FirstOrDefaultAsync();
         return View(vm);
     }
-    [HttpGet]
+    [HttpGet,AllowAnonymous]
     public async Task<IActionResult> BuyTicketAsync(long ShowID, long MovieID)
     {
         var vm = new BuyTicketVm();
@@ -145,7 +149,7 @@ public class PublicController : Controller
     {
         var currentUserID = _currentUser.GetCurrentUserId();
         var vm = new TicketIndexVm();
-        var reservationIds = _context.ReservationSeats.Include(x=>x.Reservation).Where(x=>x.Reservation.UserID==currentUserID).Select(x=>x.ReservationID).ToList();
+        var reservationIds = _context.ReservationSeats.Include(x => x.Reservation).Where(x => x.Reservation.UserID == currentUserID).Select(x => x.ReservationID).ToList();
         var distinctReservationId = reservationIds.Distinct().ToList();
         vm.Reservations = await _context.Reservations
                             .Include(x => x.Show).ThenInclude(y => y.Movie)
@@ -155,20 +159,20 @@ public class PublicController : Controller
 
         return View(vm);
     }
-
+    [AllowAnonymous]
     public IActionResult NowShowing()
     {
         var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
         var vm = new MovieVm();
-        vm.Shows = _context.Shows.Include(x=>x.Movie).Include(x=>x.Audi).Where(x=>x.Audi.LocationID==currentLocationId && x.ShowStatus == "Now Showing").ToList();
+        vm.Shows = _context.Shows.Include(x => x.Movie).Include(x => x.Audi).Where(x => x.Audi.LocationID == currentLocationId && x.ShowStatus == "Now Showing").ToList();
         return View(vm);
     }
-
+    [AllowAnonymous]
     public IActionResult ComingSoon()
     {
         var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
         var vm = new MovieVm();
-        vm.Shows = _context.Shows.Include(x=>x.Movie).Include(x=>x.Audi).Where(x=>x.Audi.LocationID==currentLocationId && x.ShowStatus=="Coming soon").ToList();
+        vm.Shows = _context.Shows.Include(x => x.Movie).Include(x => x.Audi).Where(x => x.Audi.LocationID == currentLocationId && x.ShowStatus == "Coming soon").ToList();
         return View(vm);
     }
     [Authorize]
@@ -177,9 +181,29 @@ public class PublicController : Controller
         return View();
     }
 
+    [Authorize,HttpPost]
+    public async Task<IActionResult> TicketNotifyAsync(long movieID)
+    {
+        var ticketNotifyExist = _context.TicketNotifies.Any(x => x.MovieID == movieID && x.UserID == _currentUser.GetCurrentUserId());
+        if (!ticketNotifyExist)
+        {
+            var TicketNotifies = new TicketNotify();
+            TicketNotifies.UserID = (long)_currentUser.GetCurrentUserId();
+            TicketNotifies.MovieID = movieID;
+            _context.Add(TicketNotifies);
+            await _context.SaveChangesAsync();
+            _notifyService.Success("You will get Email!!!");
+        }
+        else
+        {
+            _notifyService.Information("You have already marked for notification!!!");
+        }
+        return RedirectToAction("detail", new { ID = movieID });
+    }
 
 
-    [HttpGet]
+
+    [HttpGet,AllowAnonymous]
     public async Task<IActionResult> GetTime(string date, long movieID)
     {
         // var currentLocationId = _currentLocation.GetCurrentLocationIDAsync();
@@ -194,7 +218,7 @@ public class PublicController : Controller
         return Json(new { data = showTime });
     }
 
-    [HttpGet]
+    [HttpGet,AllowAnonymous]
     public IActionResult GetSeat(long showtimeID)
     {
         var ShowSeats = _context.ShowSeats.Where(x => x.ShowTimeID == showtimeID).Include(x => x.Seat).ThenInclude(y => y.Audi).ToList();
@@ -202,3 +226,5 @@ public class PublicController : Controller
     }
 
 }
+
+// 192.168.1.67
