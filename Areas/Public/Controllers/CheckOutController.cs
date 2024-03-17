@@ -199,8 +199,8 @@ public class CheckOut : Controller
                 }
             }
             tx.Complete();
-            var vm = new ReservationVm();
-            vm.TicketLink = reservationID+".pdf";
+            // var vm = new ReservationVm();
+            // vm.TicketLink = reservationID+".pdf";
             return RedirectToAction(nameof(Index),nameof(Public));
         }
         catch (Exception e)
@@ -228,11 +228,12 @@ public class CheckOut : Controller
         }
     }
 
-    [Obsolete]
-    public IActionResult DownloadTicket(long reservatioinID)
+    // [Obsolete]
+    [HttpGet]
+    public IActionResult DownloadTicket(long reservationID)
     {
 
-        var reservationSeat = _context.ReservationSeats.Where(x => x.ReservationID == reservatioinID)
+        var reservationSeat = _context.ReservationSeats.Where(x => x.ReservationID == reservationID)
         .Include(x => x.Reservation)
         .Include(x => x.ShowSeat)
             .ThenInclude(y => y.Seat)
@@ -242,8 +243,8 @@ public class CheckOut : Controller
             .ThenInclude(y => y.ShowTime)
                 .ThenInclude(y => y.ShowDate)
         .ToList();
-        
-        Document.Create(container =>
+      
+      Document document=  Document.Create(container =>
        {
            foreach (var ticket in reservationSeat)
            {
@@ -303,9 +304,11 @@ public class CheckOut : Controller
 
                 });
            }
-       })
-       .GeneratePdf(reservatioinID + ".pdf");
-        return View();
+       });
+    //    .GeneratePdf(reservatioinID + ".pdf");
+        byte[] pdfBytes = document.GeneratePdf();
+        MemoryStream ms = new MemoryStream(pdfBytes);
+        return new FileStreamResult(ms, "application/pdf");
     }
     public void UpdateSessionID(string sessionID, long reservationID)
     {

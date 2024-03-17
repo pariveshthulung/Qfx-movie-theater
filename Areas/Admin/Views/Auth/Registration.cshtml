@@ -46,8 +46,8 @@
             <div class="form-outline mb-4">
                 <label class="form-label" asp-for="ConfirmPassword">Confirm Password <span>*</span></label>
                 <input type="password" asp-for="ConfirmPassword" name="confirmPassword" id="confirmPassword" class="form-control" />
-                <span id='message'></span>
             </div>
+        
 
             <!-- Checkbox -->
             @* <div class="form-check d-flex justify-content-center mb-4">
@@ -60,6 +60,8 @@
             <!-- Submit button -->
             <div class="d-flex justify-content-center">
                 <button type="submit" id="submit" name= "submit" class="btn btn-primary btn-block mb-4" disabled>sign-up</button>
+                <br>
+                <p class="d-block" id="message"></p>
             </div>
             <!-- sign in buttons -->
             <div class="text-center">

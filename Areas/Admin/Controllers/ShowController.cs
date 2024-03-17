@@ -118,6 +118,7 @@ public class ShowController : Controller
     {
         try
         {
+            
             _context.Shows.Remove(_context.Shows.Where(x => x.ID == ID).FirstOrDefault());
             // _context.ShowSeats.RemoveRange(_context.ShowSeats.Where(x => x.ShowID == ID).ToList());
             await _context.SaveChangesAsync();

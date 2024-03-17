@@ -8,6 +8,7 @@ using QFX.Manager.Interface;
 using QFX.Models;
 using QFX.Provider;
 using QFX.Provider.Interface;
+using QFX.Service;
 using QuestPDF.Infrastructure;
 using Stripe;
 
@@ -39,9 +40,14 @@ builder.Services.AddScoped<DbContext, ApplicationDbContext>();
 builder.Services.AddScoped<IAuthManager , AuthManager>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 builder.Services.AddScoped<ICurrentLocationProvider, CurrentLocationProvider>();
+builder.Services.AddScoped<IMailSender, MailSender>();
+// builder.Services.AddScoped<AutomateMailService>();
+// builder.Services.AddHostedService<AutomateMailService>();
 // builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

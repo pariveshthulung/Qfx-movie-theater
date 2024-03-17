@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using QFX.Constants;
 using QFX.data;
 using QFX.Entity;
+using QFX.Manager.Interface;
 using QFX.ViewModels.UserVm;
 
 namespace QFX.Areas.Admin.Controllers;
@@ -15,11 +16,13 @@ public class UserController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly INotyfService _notifyService;
+    private readonly IMailSender _emailSender;
 
-    public UserController(ApplicationDbContext context, INotyfService notyfService)
+    public UserController(ApplicationDbContext context, INotyfService notyfService,IMailSender emailSender)
     {
         _context = context;
         _notifyService = notyfService;
+        _emailSender = emailSender;
     }
     public IActionResult Index()
     {
@@ -50,6 +53,7 @@ public class UserController : Controller
             await _context.SaveChangesAsync();
             tx.Complete();
             _notifyService.Success("user added.!!!");
+            _emailSender.SendRegistrationMail(vm.Email,"User Registration");
             return RedirectToAction(nameof(Index));
         }
         catch (Exception e)
@@ -105,4 +109,5 @@ public class UserController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
+    
 }

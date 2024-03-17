@@ -17,13 +17,15 @@ public class AuthController : Controller
     private readonly ApplicationDbContext _context;
     private readonly INotyfService _notifyService;
     private readonly ICurrentUserProvider _currentUserProvider;
+    private readonly IMailSender _emailSender;
 
-    public AuthController(IAuthManager authmanager, ApplicationDbContext context, INotyfService notyfService, ICurrentUserProvider currentUserProvider)
+    public AuthController(IAuthManager authmanager, ApplicationDbContext context, INotyfService notyfService, ICurrentUserProvider currentUserProvider, IMailSender mailSender)
     {
         _context = context;
         _authmanager = authmanager;
         _notifyService = notyfService;
         _currentUserProvider = currentUserProvider;
+        _emailSender = mailSender;
     }
     public IActionResult Login()
     {
@@ -49,7 +51,7 @@ public class AuthController : Controller
             {
                 return RedirectToAction("Index", "Movie", new { area = "Admin" });
             }
-            else if(currentUser.UserType == Constants.UserTypeConstants.Employee)
+            else if (currentUser.UserType == Constants.UserTypeConstants.Employee)
             {
                 return RedirectToAction("Index", "Movie", new { area = "Admin" });
             }
@@ -98,6 +100,66 @@ public class AuthController : Controller
     {
         await _authmanager.Logout();
         return RedirectToAction("Index", "Public", new { area = "Public" });
+    }
+
+    public async Task<IActionResult> ForgetPasswordAsync()
+    {
+        if (_currentUserProvider.IsLoggedIn())
+        {
+            await _authmanager.Logout();
+        }
+        var vm = new ForgetPasswordVm();
+        return View(vm);
+    }
+    [HttpPost]
+    public IActionResult ForgetPassword(ForgetPasswordVm vm, string? email)
+    {
+        try
+        {
+            var userExit = _context.Users.Any(x => x.Email == vm.Email || x.Email == email);
+            if (userExit)
+            {
+                var OTP = GenerateOtpToken();
+                _emailSender.SendOTP(vm.Email, OTP);
+                return RedirectToAction("ChangePassword", new { email = vm.Email, VerificationCode = OTP, Expire = DateTime.Now.AddMinutes(3) });
+            }
+            vm.ErrorMessage = "user doesnot exist!!!";
+            return View(vm);
+        }
+        catch (Exception e)
+        {
+            vm.ErrorMessage = e.Message;
+            return View(vm);
+        }
+    }
+    public IActionResult ChangePassword(string email, long VerificationCode, DateTime Expire)
+    {
+        var vm = new ForgetPasswordVm();
+        vm.VerificationCode = VerificationCode;
+        vm.Email = email;
+        vm.Expire = Expire;
+        return View(vm);
+    }
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ForgetPasswordVm vm)
+    {
+        DateTime now = DateTime.Now;
+        if (vm.VerificationCode != vm.ConfirmVerificationCode || vm.Expire < now)
+        {
+            vm.ErrorMessage = "Invalid verification code";
+            return View(vm);
+        }
+        var userExit = _context.Users.FirstOrDefault(x => x.Email == vm.Email);
+        userExit.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vm.Password);
+        await _context.SaveChangesAsync();
+        _notifyService.Success("Password change successfully!!!");
+        _emailSender.CustomMail(vm.Email,"Password Change!!!","<p>Your password has been change successfully!!!</p>");
+        return RedirectToAction(nameof(Login));
+    }
+    private long GenerateOtpToken()
+    {
+        var rand = new Random();
+        return rand.Next(100000, 1000000);
     }
 
 

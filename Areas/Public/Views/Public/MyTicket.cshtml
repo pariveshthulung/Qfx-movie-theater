@@ -23,20 +23,20 @@
                         </div>
                     </div>
                     <div class="col my-auto">
-                        <strong>@ticket.Show.Movie.Title</strong>
+                       <strong> @ticket.Show.Movie.Title</strong>
                     </div>
                     <div class="col my-auto">
-                        <strong>@ticket.ShowTime.ShowDate.Date.ToString("ddd dd MMM")</strong>
+                        @ticket.ShowTime.ShowDate.Date.ToString("ddd dd MMM")
                     </div>
                     <div class="col my-auto">
-                        <strong>@ticket.ShowTime.Time.ToString("hh : mm tt")</strong>
+                        @ticket.ShowTime.Time.ToString("hh:mm tt")
                     </div>
                     <div class="col my-auto">
-                        <a href="/QFX/3.pdf">View</a>
+                        <a asp-action="DownloadTicket" asp-controller="CheckOut" asp-route-reservationID="@ticket.ID">View</a>
                     </div>
-                    <div class="col my-auto">
-                        <strong>Download</strong>
-                    </div>
+                    @* <div class="col my-auto">
+                        Download
+                    </div> *@
                     <div class="col my-auto">
                         @* <strong>Download</strong> *@
                     </div>
