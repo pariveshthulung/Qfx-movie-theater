@@ -1,0 +1,60 @@
+@model QFX.ViewModels.UserVm.UpsertVm;
+@{
+    Layout = "_PublicLayout";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<div class="container mt-5 pt-5">
+    <form method="post" class="mx-auto">
+    <div class="row justify-content-center">
+
+        @* <div class="col-6"> *@
+        <!-- 2 column grid layout with text inputs for the first and last names -->
+        <div class="w-25">
+
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" asp-for="Name"></label>
+                        <input type="text" asp-for="Name" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Email"></label>
+                <input type="email" id="check" asp-for="Email" class="form-control" />
+            </div>
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="PhoneNo"></label>
+                <input type="tel" id="check" placeholder="98xxxxxxxx" asp-for="PhoneNo" class="form-control" />
+            </div>
+            <div class="form-outline mb-4">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" id="check" asp-for="DateOfBirth" class="form-control" />
+            </div>
+        </div>
+    </div>
+        <div class="col-12 col-md-3 mb-5 mx-auto">
+            <button type="submit" asp-action="Update" asp-controller="Public" asp-area="Public" style="width: 200px;margin-left:10px;"
+                value="Place Order" class="btn btn-primary btn-sm form-control">Update
+                Profile</button>
+            <p>Wanna change password? <button type="submit" asp-action="ForgetPassword" asp-controller="Auth"
+                    asp-area="Admin" asp-route-email="@Model.Email" value="Place Order"
+                    class=" border-0  btn-link link-opacity-100-hover link-underline mt-4">Change Password</button></p>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    $('#password, #confirmPassword').on('keyup', function () {
+        if ($('#password').val() == $('#confirmPassword').val()) {
+            $('#message').html('Matching').css('color', 'green'),
+                document.getElementById('submit').disabled = false;
+        } else
+            $('#message').html('Not Matching').css('color', 'red'),
+                document.getElementById('submit').disabled = true;
+    });
+</script>
