@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Transactions;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using QFX.Models;
 using QFX.Provider.Interface;
 using QFX.ViewModels.PublicVm;
 using QFX.ViewModels.TicketVm;
+using QFX.ViewModels.UserVm;
 
 namespace QFX.Areas.Public.Controllers;
 [Area("Public")]
@@ -32,7 +34,7 @@ public class PublicController : Controller
     [HttpGet,AllowAnonymous]
     public async Task<IActionResult> IndexAsync(long? ID)
     {
-        var vm = new IndexVm();
+        var vm = new QFX.ViewModels.PublicVm.IndexVm();
         var currentUserId = _currentUser.GetCurrentUserId();
 
         // get LocationID from session
@@ -178,7 +180,35 @@ public class PublicController : Controller
     [Authorize]
     public IActionResult UserProfile()
     {
-        return View();
+        var currentUser = _context.Users.Where(x=>x.ID == _currentUser.GetCurrentUserId()).FirstOrDefault();
+        var vm = new UpsertVm();
+        vm.Email = currentUser.Email;
+        vm.Name = currentUser.Name;
+        vm.PhoneNo = currentUser.PhoneNo;
+        vm.UserStatus = currentUser.UserStatus;
+        vm.DateOfBirth = currentUser.DateOfBirth;
+        return View(vm);
+    }
+    [HttpPost,Authorize]
+    public async Task<IActionResult> Update(UpsertVm vm)
+    {
+        try
+        {   using var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            var user = await _context.Users.FirstOrDefaultAsync(x=>x.ID==_currentUser.GetCurrentUserId());
+            user.Name = vm.Name;
+            user.PhoneNo = vm.PhoneNo;
+            user.Email = vm.Email;
+            user.DateOfBirth = vm.DateOfBirth;
+            await _context.SaveChangesAsync();
+            tx.Complete();
+            _notifyService.Success("User updated!!!");
+            return RedirectToAction("Index");
+        }
+        catch (Exception e)
+        {
+            _notifyService.Error("Operation fail" + e.Message);
+            return RedirectToAction("Index");
+        }
     }
 
     [Authorize,HttpPost]

@@ -154,6 +154,10 @@ public class AuthController : Controller
         await _context.SaveChangesAsync();
         _notifyService.Success("Password change successfully!!!");
         _emailSender.CustomMail(vm.Email,"Password Change!!!","<p>Your password has been change successfully!!!</p>");
+        if(_currentUserProvider.IsLoggedIn())
+        {
+            await _authmanager.Logout();
+        }
         return RedirectToAction(nameof(Login));
     }
     private long GenerateOtpToken()
