@@ -13,7 +13,4 @@ public class ShowSeat
     [ForeignKey("SeatID")]
     public virtual Seat? Seat { get; set; }
 
-    internal class List
-    {
-    }
 }

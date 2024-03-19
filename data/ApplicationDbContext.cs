@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QFX.Entity;
+using QFX.Manager.Interface;
 using QFX.Models;
 
 namespace QFX.data;
@@ -27,4 +28,28 @@ public class ApplicationDbContext : DbContext
     public DbSet<TicketNotify> TicketNotifies { get; set; }
 
     public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
+
+    public override int SaveChanges()
+    {
+        foreach(var record in ChangeTracker.Entries())
+        {
+            var entity = record.Entity;
+            if(record.State == EntityState.Deleted && entity is ISoftDelete)
+            {
+                record.State = EntityState.Modified;
+                record.GetType().GetProperty("IsDeleted").SetValue(entity,true);
+            }
+        }
+        return base.SaveChanges();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Movie>().HasQueryFilter(x=>!x.IsDeleted);
+        modelBuilder.Entity<Audi>().HasQueryFilter(x=>!x.IsDeleted);
+        modelBuilder.Entity<Reservation>().HasQueryFilter(x=>!x.IsDeleted);
+        modelBuilder.Entity<Seat>().HasQueryFilter(x=>!x.IsDeleted);
+        modelBuilder.Entity<Show>().HasQueryFilter(x=>!x.IsDeleted);
+
+    }
 }

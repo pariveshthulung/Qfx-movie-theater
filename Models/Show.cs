@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using QFX.Manager.Interface;
 
 namespace QFX.Models;
 
-public class Show
+public class Show : ISoftDelete
 {
     public long ID { get; set; }
     public string? ShowStatus { get; set; }
@@ -12,4 +13,5 @@ public class Show
     public long AudiID { get; set; }
     [ForeignKey("AudiID")]
     public virtual Audi? Audi { get; set; }
+    public bool IsDeleted { get; set; } = false;
 }

@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -73,16 +74,17 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> Registration(RegistrationVm vm)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(vm);
-        }
+        // if (!ModelState.IsValid)
+        // {
+        //     return View(vm);
+        // }
         try
         {
             var userExit = await _context.Users.AnyAsync(x => x.Email == vm.Email);
             if (!userExit)
             {
                 await _authmanager.Registration(vm);
+                BackgroundJob.Enqueue<IMailSender>(x => x.SendRegistrationMail(vm.Email, "QFX's User Registration"));
                 return RedirectToAction("LogIn", "Auth");
             }
             _notifyService.Error("User already exits with same Email !!!");
@@ -120,7 +122,9 @@ public class AuthController : Controller
             if (userExit)
             {
                 var OTP = GenerateOtpToken();
-                _emailSender.SendOTP(vm.Email, OTP);
+                // _emailSender.SendOTP(vm.Email, OTP);
+                BackgroundJob.Enqueue<IMailSender>(x => x.SendOTP(vm.Email, OTP));
+
                 return RedirectToAction("ChangePassword", new { email = vm.Email, VerificationCode = OTP, Expire = DateTime.Now.AddMinutes(3) });
             }
             vm.ErrorMessage = "user doesnot exist!!!";
@@ -153,8 +157,10 @@ public class AuthController : Controller
         userExit.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vm.Password);
         await _context.SaveChangesAsync();
         _notifyService.Success("Password change successfully!!!");
-        _emailSender.CustomMail(vm.Email,"Password Change!!!","<p>Your password has been change successfully!!!</p>");
-        if(_currentUserProvider.IsLoggedIn())
+        // _emailSender.CustomMail(vm.Email, "Password Change!!!", "<p>Your password has been change successfully!!!</p>");
+        BackgroundJob.Enqueue<IMailSender>(x => x.CustomMail(vm.Email, "Password Change!!!", "<p>Your password has been change successfully!!!</p>"));
+
+        if (_currentUserProvider.IsLoggedIn())
         {
             await _authmanager.Logout();
         }

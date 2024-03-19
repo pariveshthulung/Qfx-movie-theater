@@ -11,6 +11,9 @@ using QFX.Provider.Interface;
 using QFX.Service;
 using QuestPDF.Infrastructure;
 using Stripe;
+using Hangfire;
+using Hangfire.SqlServer;
+using QFX.Generic.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,14 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options=>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    // Add Hangfire services.
+builder.Services.AddHangfire(configuration => configuration
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(x=>{x.LoginPath = "/Admin/Auth/Login"; });
@@ -41,6 +52,7 @@ builder.Services.AddScoped<IAuthManager , AuthManager>();
 builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 builder.Services.AddScoped<ICurrentLocationProvider, CurrentLocationProvider>();
 builder.Services.AddScoped<IMailSender, MailSender>();
+builder.Services.AddScoped<IDeleteShow, DeleteShow>();
 // builder.Services.AddScoped<AutomateMailService>();
 // builder.Services.AddHostedService<AutomateMailService>();
 // builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
@@ -65,6 +77,10 @@ QuestPDF.Settings.License = LicenseType.Community;
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
+
+app.UseHangfireDashboard();
+    // backgroundJobs.Enqueue(() => Console.WriteLine("Hello world from Hangfire!"));
+
 
 app.UseAuthorization();
 

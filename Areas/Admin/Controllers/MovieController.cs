@@ -119,6 +119,7 @@ public class MovieController : Controller
         vm.ImageUrl = movie.ImageUrl;
         vm.CoverUrl = movie.CoverUrl;
         vm.TrailerUrl = movie.TrailerUrl;
+        vm.ReleaseDate = movie.ReleaseDate;
         vm.Runtime = movie.Runtime.ToString();
         vm.Description = movie.Description;
         vm.LanguageID = movie.LanguageID;
@@ -148,6 +149,7 @@ public class MovieController : Controller
         movie.LanguageID = vm.LanguageID;
         movie.Runtime = TimeSpan.Parse(vm.Runtime);
         movie.TrailerUrl = vm.TrailerUrl;
+        movie.ReleaseDate = vm.ReleaseDate;
         movie.Cast = vm.Cast;
         movie.Director = vm.Director;
 

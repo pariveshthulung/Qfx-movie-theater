@@ -123,7 +123,6 @@ public class ShowController : Controller
             // _context.ShowSeats.RemoveRange(_context.ShowSeats.Where(x => x.ShowID == ID).ToList());
             await _context.SaveChangesAsync();
             _notifyService.Success("Show deleted!!");
-
             return RedirectToAction(nameof(Index));
         }
         catch (Exception e)

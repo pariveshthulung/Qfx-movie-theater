@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using QFX.Entity;
+using QFX.Manager.Interface;
 
 namespace QFX.Models;
 
-public class Reservation
+public class Reservation : ISoftDelete
 {
     public long ID { get; set; }
     public string? SessionID { get; set; }
@@ -17,4 +18,5 @@ public class Reservation
     public long UserID { get; set; }
     [ForeignKey("UserID")]
     public virtual User? User { get; set; }
+    public bool IsDeleted  { get; set; } = false;
 }

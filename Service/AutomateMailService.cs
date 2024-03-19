@@ -19,10 +19,13 @@ public class AutomateMailService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        Task.Run(async () => {
         while (await _timer.WaitForNextTickAsync(stoppingToken) && !stoppingToken.IsCancellationRequested)
         {
             // _emailSender.SendRegistrationMail("pariveshthulung@gmail.com", "This is timer");
             Console.WriteLine("hello");
         }
+
+        });
     }
 }
