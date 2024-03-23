@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Net.Http;
 using System.Transactions;
 using AspNetCoreHero.ToastNotification.Abstractions;
@@ -70,7 +71,7 @@ public class PublicController : Controller
         {
             if (vm.LocationID != 0)
             {
-
+                vm.NowShowing = _context.Shows.Include(x=>x.Movie).Where(x => audiID.Contains(x.AudiID) && x.ShowStatus == "Now Showing").ToList();
                 vm.Shows = await _context.Shows.Where(x => audiID.Contains(x.AudiID)).Include(x => x.Movie).ToListAsync();
             }
             else

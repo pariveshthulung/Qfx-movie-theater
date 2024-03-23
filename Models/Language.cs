@@ -1,4 +1,6 @@
-﻿namespace QFX.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace QFX.Models;
 
 public class Language
 {

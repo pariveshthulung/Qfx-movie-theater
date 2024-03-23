@@ -7,7 +7,7 @@
 </div>
 <div class="row mx-5 mb-5">
 
-  @foreach (var show in Model.Shows)
+  @foreach (var show in Model.Shows.DistinctBy(x=>x.MovieID))
   {
     <div class="col-1 mx-4">
 
