@@ -9,6 +9,7 @@ public class Seat :ISoftDelete
 {
     public long ID { get; set; }
     public string?  SeatName { get; set; }
+    
     public string? SeatStatus { get; set; } = SeatStatusConstants.Active;
     public string? SeatType { get; set; } = SeatTypeConstants.Platinum;
     public long AudiID { get; set; }

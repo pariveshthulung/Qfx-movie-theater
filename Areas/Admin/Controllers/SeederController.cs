@@ -355,91 +355,106 @@ public class SeederController : Controller
                     Name = "Audi1",
                     Row = 6,
                     Column = 8,
-                    LocationID = -1
+                    LocationID = -1,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -2,
                     Name = "Audi2",
                     Row = 6,
                     Column = 8,
-                    LocationID = -1
+                    LocationID = -1,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -3,
                     Name = "Audi1",
                     Row = 6,
                     Column = 8,
-                    LocationID = -2
+                    LocationID = -2,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -4,
                     Name = "Audi2",
                     Row = 6,
                     Column = 8,
-                    LocationID = -2
+                    LocationID = -2,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -5,
                     Name = "Audi1",
                     Row = 6,
                     Column = 8,
-                    LocationID = -3
+                    LocationID = -3,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -6,
                     Name = "Audi2",
                     Row = 6,
                     Column = 8,
-                    LocationID = -3
+                    LocationID = -3,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -7,
                     Name = "Audi1",
                     Row = 9,
                     Column = 10,
-                    LocationID = -4
+                    LocationID = -4,
+                    PremiumRow = 10-2
                 },
                 new(){
                     ID = -8,
                     Name = "Audi2",
                     Row = 9,
                     Column = 11,
-                    LocationID = -4
+                    LocationID = -4,
+                    PremiumRow = 11-2
                 },
                 new(){
                     ID = -9,
                     Name = "Audi1",
                     Row = 6,
                     Column = 8,
-                    LocationID = -5
+                    LocationID = -5,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -10,
                     Name = "Audi2",
                     Row = 7,
                     Column = 8,
-                    LocationID = -5
+                    LocationID = -5,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -11,
                     Name = "Audi1",
                     Row = 6,
                     Column = 8,
-                    LocationID = -6
+                    LocationID = -6,
+                    PremiumRow = 8-2
                 },
                 new(){
                     ID = -12,
                     Name = "Audi2",
                     Row = 6,
                     Column = 9,
-                    LocationID = -6
+                    LocationID = -6,
+                    PremiumRow = 9-2
+                    
                 },
                 new(){
                     ID = -13,
                     Name = "Audi3",
                     Row = 8,
                     Column = 10,
-                    LocationID = -6
+                    LocationID = -6,
+                    PremiumRow = 10-2
+
                 },
             });
                 await _context.SaveChangesAsync();
@@ -475,6 +490,7 @@ public class SeederController : Controller
                             var seat = new Seat();
                             seat.SeatName = x.ToString() + j;
                             seat.AudiID = audi.ID;
+                            
                             if (i == (audi.Column - 2))
                             {
                                 seat.SeatType = SeatTypeConstants.Premium;
@@ -553,26 +569,6 @@ public class SeederController : Controller
                             _context.ShowTimes.Add(time);
                             await _context.SaveChangesAsync();
                             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT  [dbo].[ShowTimes] OFF;");
-
-                            // add showSeat 
-                            // for (var a = 1; a <= 3; a++)
-                            // {
-                            // var seatId = _context.Seats.Where(x => x.AudiID == ids).Select(X => X.ID).ToList();
-                            // var seatId = _context.Seats.Select(X => X.ID).ToList();
-                            // foreach (var id in seatId)
-                            // {
-                            //     var showSeat = new ShowSeat();
-                            //     showSeat.ShowTimeID = ids;
-                            //     showSeat.SeatID = id;
-                            //     showSeat.ShowSeatStatus = SeatStatusConstants.Active;
-                            //     // _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT  [dbo].[ShowSeats] ON;");
-                            //     _context.ShowSeats.Add(showSeat);
-                            //     await _context.SaveChangesAsync();
-                            //     // _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT  [dbo].[ShowSeats] OFF;");
-
-                            // }
-                            // }
-
 
                         }
 

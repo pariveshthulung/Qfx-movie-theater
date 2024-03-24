@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QFX.Constants;
 using QFX.data;
+using QFX.Migrations;
 using QFX.Models;
 using QFX.ViewModels.AudiVm;
 
@@ -35,6 +36,7 @@ public class AudiController : Controller
             vm.Name = audi.Name;
             vm.Row = audi.Row;
             vm.Column = audi.Column;
+            vm.PremiumRow = audi.PremiumRow;
             vm.LocationID = audi.LocationID;
         }
         vm.Locations = await _context.Locations.ToListAsync();
@@ -49,42 +51,68 @@ public class AudiController : Controller
             {
                 var audi = await _context.Audis.FirstOrDefaultAsync(x => x.ID == ID);
                 audi.Name = vm.Name;
-                audi.Row = vm.Row;
-                audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
-                _context.Seats.RemoveRange(await _context.Seats.Where(x => x.AudiID == ID).ToListAsync());
+                if (audi.PremiumRow != vm.PremiumRow)
+                {
+                    audi.PremiumRow = vm.PremiumRow;
+                    var seatsDB = await _context.Seats.Where(x => x.AudiID == ID).ToListAsync();
+                    var seatCount = seatsDB.Count;
+                    var changeFrom = (vm.PremiumRow * audi.Row) - audi.Row;
+                    var changeTo = vm.PremiumRow * audi.Row;
+                    foreach (var seat in seatsDB)
+                    {
+                        seat.SeatType = SeatTypeConstants.Platinum;
+                        await _context.SaveChangesAsync();
+
+                    }
+                    for (int i = changeFrom ; i < changeTo; i++)
+                    {
+                        seatsDB[i].SeatType = SeatTypeConstants.Premium;
+                        await _context.SaveChangesAsync();
+
+                    }
+                }
+                if (audi.Row != vm.Row || audi.Column != vm.Column)
+                {
+                    audi.Row = vm.Row;
+                    audi.Column = vm.Column;
+                    _context.Seats.RemoveRange(await _context.Seats.Where(x => x.AudiID == ID).ToListAsync());
+                    await _context.SaveChangesAsync();
+
+                    char x = 'A';
+                    for (var i = 1; i <= vm.Column; i++)
+                    {
+                        for (var j = 1; j <= vm.Row; j++)
+                        {
+
+                            var seat = new Seat();
+                            seat.SeatName = x.ToString() + j;
+                            seat.AudiID = audi.ID;
+
+                            if (i == vm.PremiumRow)
+                            {
+                                seat.SeatType = SeatTypeConstants.Premium;
+                            }
+                            _context.Seats.Add(seat);
+                            await _context.SaveChangesAsync();
+                        }
+                        x++;
+                    }
+                }
                 await _context.SaveChangesAsync();
 
-                char x = 'A';
-                for (var i = 1; i <= vm.Column; i++)
-                {
-                    for (var j = 1; j <= vm.Row; j++)
-                    {
-                        
-                        var seat = new Seat();
-                        seat.SeatName = x.ToString() + j;
-                        seat.AudiID = audi.ID;
-                        
-                        if(i==vm.PremiumRow){
-                            seat.SeatType = SeatTypeConstants.Premium;
-                        }
-                        _context.Seats.Add(seat);
-                        await _context.SaveChangesAsync();
-                    }
-                    x++;
-                }
             }
             else
             {
-                var existAudi = _context.Audis.Where(x=>x.LocationID==vm.LocationID).ToList();
+                var existAudi = _context.Audis.Where(x => x.LocationID == vm.LocationID).ToList();
                 int n = existAudi.Count;
                 n++;
                 var audi = new Audi();
-                audi.Name = "Audi"+ n;
+                audi.Name = "Audi" + n;
                 audi.Row = vm.Row;
                 audi.Column = vm.Column;
                 audi.LocationID = vm.LocationID;
-            
+
                 _context.Audis.Add(audi);
                 await _context.SaveChangesAsync();
 
@@ -96,7 +124,8 @@ public class AudiController : Controller
                         var seat = new Seat();
                         seat.SeatName = x.ToString() + j;
                         seat.AudiID = audi.ID;
-                        if(j==vm.PremiumRow){
+                        if (j == vm.PremiumRow)
+                        {
                             seat.SeatType = SeatTypeConstants.Premium;
                         }
                         _context.Seats.Add(seat);
