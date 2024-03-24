@@ -12,7 +12,7 @@ public class IndexVm
     public int PremiumQty { get; set; }
     public int PlatinumQty { get; set; } 
     [Column(TypeName = "decimal(18,2)")]
-    public decimal PremiumPrice { get; set; } = 400;
+    public decimal PremiumPrice { get; set; } 
     [Column(TypeName = "decimal(18,2)")]
-    public decimal PlatinumPrice { get; set; } = 200;
+    public decimal PlatinumPrice { get; set; }
 }

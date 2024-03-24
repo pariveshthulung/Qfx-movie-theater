@@ -86,7 +86,7 @@ public class MovieController : Controller
                 Director = vm.Director
             };
             var imageName = ConfirmImage(vm.PosterImage, movie.ImageUrl);
-            var coverName = ConfirmImage(vm.CoverImage,movie.CoverUrl);
+            var coverName = ConfirmImage(vm.CoverImage, movie.CoverUrl);
             movie.CoverUrl = coverName;
             movie.ImageUrl = imageName;
             _context.Movies.Add(movie);
@@ -142,8 +142,9 @@ public class MovieController : Controller
             var imageName = ConfirmImage(vm.PosterImage, movie.ImageUrl);
             movie.ImageUrl = imageName;
         }
-        if(vm.CoverImage != null){
-            var coverName = ConfirmImage(vm.CoverImage,movie.CoverUrl);
+        if (vm.CoverImage != null)
+        {
+            var coverName = ConfirmImage(vm.CoverImage, movie.CoverUrl);
             movie.CoverUrl = coverName;
         }
         movie.LanguageID = vm.LanguageID;
@@ -156,29 +157,32 @@ public class MovieController : Controller
         await _context.SaveChangesAsync();
 
         // List<long> oldMovieGenre = _context.MovieGenres.Where(x => x.MovieID == movie.ID).Select(x => x.GenreID).ToList();
-        _context.MovieGenres.RemoveRange(_context.MovieGenres.Where(x => x.MovieID == movie.ID));
-        await _context.SaveChangesAsync();
-        foreach (var ids in vm.GenreIDs)
+        if (vm.GenreIDs != null)
         {
-            var movieGenre = new MovieGenre();
-            movieGenre.GenreID = ids;
-            movieGenre.MovieID = movie.ID;
-            await _context.MovieGenres.AddAsync(movieGenre);
+            _context.MovieGenres.RemoveRange(_context.MovieGenres.Where(x => x.MovieID == movie.ID));
             await _context.SaveChangesAsync();
+            foreach (var ids in vm.GenreIDs)
+            {
+                var movieGenre = new MovieGenre();
+                movieGenre.GenreID = ids;
+                movieGenre.MovieID = movie.ID;
+                await _context.MovieGenres.AddAsync(movieGenre);
+                await _context.SaveChangesAsync();
+            }
         }
         _notifyService.Success("Product added successfully.");
         return RedirectToAction(nameof(Index));
     }
 
-    public async Task<IActionResult> Delete(long ID)
+    public IActionResult Delete(long ID)
     {
         try
         {
 
-            _context.Movies.Remove(_context.Movies.Where(x=>x.ID==ID).FirstOrDefault());
-            List<MovieGenre> movieGenres = _context.MovieGenres.Where(x => x.MovieID == ID).ToList();
-            _context.MovieGenres.RemoveRange(movieGenres);
-            await _context.SaveChangesAsync();
+            _context.Movies.Remove(_context.Movies.Where(x => x.ID == ID).FirstOrDefault());
+            // List<MovieGenre> movieGenres = _context.MovieGenres.Where(x => x.MovieID == ID).ToList();
+            // _context.MovieGenres.RemoveRange(movieGenres);
+             _context.SaveChanges();
             _notifyService.Success("Deleted sucessfully");
             return RedirectToAction(nameof(Index));
         }

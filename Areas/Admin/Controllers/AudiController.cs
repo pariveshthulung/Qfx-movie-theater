@@ -64,7 +64,8 @@ public class AudiController : Controller
                         var seat = new Seat();
                         seat.SeatName = x.ToString() + j;
                         seat.AudiID = audi.ID;
-                        if(j==vm.PremiumRow){
+                        
+                        if(i==vm.PremiumRow){
                             seat.SeatType = SeatTypeConstants.Premium;
                         }
                         _context.Seats.Add(seat);

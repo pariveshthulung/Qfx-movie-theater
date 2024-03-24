@@ -26,44 +26,26 @@ public class CheckOut : Controller
     private readonly ApplicationDbContext _context;
     private readonly ICurrentUserProvider _currentUser;
     private readonly INotyfService _notifyService;
+    private readonly ICurrentLocationProvider _currentLocation;
 
-    public CheckOut(ApplicationDbContext context, ICurrentUserProvider currentUserProvider, INotyfService notyfService)
+    public CheckOut(ApplicationDbContext context, ICurrentUserProvider currentUserProvider, INotyfService notyfService,ICurrentLocationProvider currentLocation)
     {
         _context = context;
         _currentUser = currentUserProvider;
         _notifyService = notyfService;
+        _currentLocation = currentLocation;
 
     }
-
-    // public IActionResult Post([FromBody] PostVm vm)
-    // {
-    //     if (vm == null)
-    //     {
-    //         return BadRequest("Invalid request data");
-    //     }
-    //     return RedirectToAction("Index", "CheckOut", vm);
-    //     // return Index(vm);
-    // }
-    // public IActionResult Index(PostVm vm)
-    // {
-    //     //  var vm2= new IndexVm
-    //     // {
-    //     //     PlatinumPrice = 200,
-    //     //     PremiumPrice = 400,
-    //     //     ShowTimeID = vm.ShowTimeID,
-    //     //     ShowID = vm.ShowID,
-    //     //     ShowSeats = _context.ShowSeats.Where(x => vm.SeatID.Contains(x.ID)).Include(x => x.Seat).ToList()
-    //     // };
-
-    //     return View(vm);
-    // }
-
     public async Task<IActionResult> Index([FromBody] IndexVm vm)
     {
         try
-        {
+        {   
             using var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             var currentUserID = _currentUser.GetCurrentUserId();
+            var currentLocationOfUser = _currentLocation.GetCurrentLocationIDAsync();
+            var location = _context.Locations.FirstOrDefault();
+            vm.PremiumPrice = location.PreminumPrice;
+            vm.PlatinumPrice = location.PlatinumPrice;
             var reservationExist = await _context.Reservations.Where(x => x.UserID == currentUserID && x.ShowTimeID == vm.ShowTimeID).FirstOrDefaultAsync();
             long reservationID;
             if (reservationExist != null)
@@ -92,17 +74,7 @@ public class CheckOut : Controller
                 LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
                 Mode = "payment",
             };
-            // foreach (var seat in vm.ShowSeats)
-            // {
-            //     if (seat.Seat.SeatType == "Platinum")
-            //     {
-            //         vm.PlatinumQty++;
-            //     }
-            //     if (seat.Seat.SeatType == "Premium")
-            //     {
-            //         vm.PremiumQty++;
-            //     }
-            // }
+    
             if (vm.PremiumQty > 0)
             {
                 var sessionLineItem = new SessionLineItemOptions

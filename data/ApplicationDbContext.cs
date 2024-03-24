@@ -29,6 +29,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<UserLocationPreference> UserLocationPreferences { get; set; }
 
+    
     public override int SaveChanges()
     {
         foreach(var record in ChangeTracker.Entries())
@@ -37,7 +38,7 @@ public class ApplicationDbContext : DbContext
             if(record.State == EntityState.Deleted && entity is ISoftDelete)
             {
                 record.State = EntityState.Modified;
-                record.GetType().GetProperty("IsDeleted").SetValue(entity,true);
+                entity.GetType().GetProperty("IsDeleted").SetValue(entity,true);
             }
         }
         return base.SaveChanges();

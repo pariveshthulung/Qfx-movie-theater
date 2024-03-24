@@ -187,7 +187,7 @@ public class SeederController : Controller
                         ReleaseDate = DateTime.Now.AddDays(2),
                         Runtime = new TimeSpan(2, 45, 00),
                         ImageUrl = "62c965f2-8158-4548-948e-82d343011141.jpg",
-                        CoverUrl = ""
+                        CoverUrl = "4bc8d4e0-2e99-47a2-b1af-4fccb44d636c.jpg"
 
                         },
                 new() {
@@ -201,7 +201,7 @@ public class SeederController : Controller
                         ReleaseDate =  DateTime.Now.AddDays(2),
                         Runtime = new TimeSpan(2, 45, 00),
                         ImageUrl = "f9e69e14-3da6-4c63-ae43-93eaa18f9da1.jpg",
-                        CoverUrl = ""
+                        CoverUrl = "7ef5f821-746f-4c88-ac09-ee861bea3023.jpg"
                         },
                 new() {
                         ID= -3,
@@ -214,7 +214,7 @@ public class SeederController : Controller
                         Runtime = new TimeSpan(2, 45, 00),
                         LanguageID = -1,
                         ImageUrl = "f0f7e72e-6b2b-4740-a9ba-fed488592bf5.jpeg",
-                        CoverUrl = ""
+                        CoverUrl = "dac5debd-574c-4d74-8838-6ade3daa2f22.webp"
                         },
 
                 new() {

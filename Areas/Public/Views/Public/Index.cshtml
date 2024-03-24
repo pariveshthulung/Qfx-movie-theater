@@ -17,25 +17,25 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
   <div class="carousel-inner">
     <a asp-action="BuyTicket" asp-controller="Public" asp-route-ShowID="@Model.NowShowing[0].ID" asp-route-MovieID="@Model.NowShowing[0].MovieID">
       <div class="carousel-item active">
-        <img style="width: 1440px; height:540px; object-fit:contain;" src="/Public/images/movie/@Model.NowShowing[0].Movie.CoverUrl" class="d-block" alt="...">
+        <img style="width: 1440px; height:540px; object-fit:cover;" src="/Public/images/movie/@Model.NowShowing[0].Movie.CoverUrl" class="d-block" alt="...">
         <div class="carousel-caption d-none d-md-block">
-          <h1 class="font-weight-bold">@Model.Shows[0].Movie.Title</h1>
+          <h1 class="font-weight-bold">@Model.NowShowing[0].Movie.Title</h1>
         </div>
     </a>
   </div>
   <a asp-action="BuyTicket" asp-controller="Public" asp-route-ShowID="@Model.NowShowing[1].ID" asp-route-MovieID="@Model.NowShowing[1].MovieID">
 
     <div class="carousel-item">
-      <img style="width: 1440px; height:540px; object-fit:contain;" src="/Public/images/movie/@Model.NowShowing[1].Movie.CoverUrl" class="d-block " alt="...">
+      <img style="width: 1440px; height:540px; object-fit:cover;" src="/Public/images/movie/@Model.NowShowing[1].Movie.CoverUrl" class="d-block " alt="...">
       <div class="carousel-caption d-none d-md-block">
-        <h1 class="font-weight-bold">@Model.Shows[1].Movie.Title</h1>
+        <h1 class="font-weight-bold">@Model.NowShowing[1].Movie.Title</h1>
         @* <p>Some representative placeholder content for the second slide.</p> *@
       </div>
     </div>
   </a>
   <a asp-action="BuyTicket" asp-controller="Public" asp-route-ShowID="@Model.NowShowing[2].ID" asp-route-MovieID="@Model.NowShowing[2].MovieID">
     <div class="carousel-item">
-      <img style="width: 1440px; height:540px; object-fit:contain;" src="/Public/images/movie/@Model.NowShowing[2].Movie.CoverUrl" class="d-block " alt="...">
+      <img style="width: 1440px; height:540px; object-fit:cover;" src="/Public/images/movie/@Model.NowShowing[2].Movie.CoverUrl" class="d-block " alt="...">
       <div class="carousel-caption d-none d-md-block">
         <h1 class="font-weight-bold">@Model.NowShowing[2].Movie.Title</h1>
         @* <p>Some representative placeholder content for the third slide.</p> *@

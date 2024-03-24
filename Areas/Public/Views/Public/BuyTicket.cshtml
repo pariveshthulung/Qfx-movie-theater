@@ -382,7 +382,7 @@ filter: invert(9%) sepia(25%) saturate(1885%) hue-rotate(191deg) brightness(88%)
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Specify Seat Type</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button id="buy-reset" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table class="w-100">
@@ -517,12 +517,14 @@ for(var i = 0; i<countTime; i++){
             console.log(data);
             var column = data.data[0].seat.audi.column;
             var row = data.data[0].seat.audi.row;
+            var premiumPrice = data.data[0].seat.audi.location.preminumPrice;
+            var platinumPrice = data.data[0].seat.audi.location.platinumPrice;
             console.log(column);
             console.log(row);
             let itemCount = -1;
              let placeholder = $("showSeat");
             let display = "";
-            display=display+"<div class='platinum'><small><span class='d-block text-center'>PLATINUM NRP 300.00</span></small>";
+            display=display+`<div class='platinum'><small><span class='d-block text-center'><strong>PLATINUM NRP ${platinumPrice}</strong></span></small>`;
 
                         var x = 'A';
 
@@ -533,11 +535,11 @@ for(var i = 0; i<countTime; i++){
                             display+="<table id='myTable' class='w-100'><tbody >";
                                     if (i == totalColumn - 2)
                                     {
-                                        display+="<div class='mt-5'><small><span class='d-block text-center'>Premium NRP 450.00</span></small></div>";
+                                        display+=`<div class='mt-5'><small><span class='d-block text-center'><strong>PREMIUM NRP ${premiumPrice}</strong></span></small></div>`;
                                     }
                                     if (i == totalColumn - 1)
                                     {
-                                        display+="<div class='mt-5'><small><span class='d-block text-center'>Platinum NRP 300.00</span></small></div>";
+                                        display+=`<div class='mt-5'><small><span class='d-block text-center'><strong>PLATINUM NRP  ${platinumPrice}</strong></span></small></div>`;
                                     }
                                     display+=`<tr class='mx-auto'><td style='width:15px'><div><span style='margin:auto;display:block;' class='p-1 m-1 text-center'>${x}</span></div></td>`;
                                         for (var j = 1; j <= row; j++)
@@ -583,7 +585,7 @@ for(var i = 0; i<countTime; i++){
             var nameOfPremiumSeat = [];
             var noOfPlatinumSeat =0;
             var nameOfPlatinumSeat =[];
-        document.querySelector("#buy-now").addEventListener("click",e=>{
+         document.querySelector("#buy-now").addEventListener("click",e=>{
             const selectedBuyNow = document.querySelectorAll("td.selected");
             for(var seat of selectedBuyNow){
                 if(seat.dataset.seatType=="Premium")
@@ -601,24 +603,47 @@ for(var i = 0; i<countTime; i++){
                     );
                 }
             }
-            if(noOfPremiumSeat>0){
+            if(noOfPremiumSeat===0){
+                document.querySelector("#premium").innerHTML=``;
+            }
+            else{
                 document.querySelector("#premium").innerHTML=`
-                    <td>Premium<br>NPR 480.00 <br>${nameOfPremiumSeat.join(",")}<br></td>
+                    <td>Premium<br>NPR  ${premiumPrice} <br><strong>${nameOfPremiumSeat.join(",")}</strong><br></td>
                     <td>${noOfPremiumSeat}</td>
-                    <td>${noOfPremiumSeat*480}</td>
+                    <td>${noOfPremiumSeat*premiumPrice}</td>
                 `;
             }
-            if(noOfPlatinumSeat>0){
+            if(noOfPlatinumSeat===0){
+                document.querySelector("#platinum").innerHTML=``; 
+            }
+            else{
                 document.querySelector("#platinum").innerHTML=`
-                    <td>Premium<br>NPR 360.00 <br>${nameOfPlatinumSeat.join(",")}<br></td>
-                    <td>${noOfPlatinumSeat}</td>
-                    <td>${noOfPlatinumSeat*360}</td>
-                `;
+                    <td>Platinum<br>NPR  ${platinumPrice} <br><strong>${nameOfPlatinumSeat.join(",")}</strong><br></td>
+                    <td >${noOfPlatinumSeat}</td>
+                    <td>${noOfPlatinumSeat*platinumPrice}</td>
+                `; 
             }
-            document.querySelector("#total").innerHTML= noOfPlatinumSeat*360 + noOfPremiumSeat*480;
-            
+            document.querySelector("#total").innerHTML= noOfPlatinumSeat*platinumPrice + noOfPremiumSeat*premiumPrice;
+            $(document).ready(function() {
+                $(".modal").on("hidden.bs.modal", function() {
+                    noOfPremiumSeat=0;
+                    nameOfPremiumSeat = [];
+                    noOfPlatinumSeat =0;
+                    nameOfPlatinumSeat =[];
+                            
+            });
+        @* document.querySelector(#buy-reset).addEventListener("click",e=>{
+             noOfPremiumSeat=0;
+             nameOfPremiumSeat = [];
+             noOfPlatinumSeat =0;
+             nameOfPlatinumSeat =[];
+        }); *@
         });
-        
+       
+});
+ 
+         
+
 
         const seatIds = [];
 document.querySelector("#confirm").addEventListener("click",e=>{
@@ -634,8 +659,8 @@ document.querySelector("#confirm").addEventListener("click",e=>{
         SeatId: seatIds,
         ShowTimeID : data.data[0].showTimeID,
         ShowID : checkShowId,
-        PremiumQty: 5,
-        PlatinumQty:5
+        PremiumQty: noOfPremiumSeat,
+        PlatinumQty: noOfPlatinumSeat
     };
     @* alert(seatIds);
     alert(data.data[0].showTimeID);
