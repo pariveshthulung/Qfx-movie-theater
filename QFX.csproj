@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <Content Remove="Areas/Admin/Views/Genre/Index.cshtml" />
     <Content Remove="Areas/Admin/Views/Show/ShowDate.cshtml" />
